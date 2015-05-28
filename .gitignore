@@ -1,0 +1,14 @@
+
+# Lumen framework
+/vendor
+.env
+
+# eclipse specific git ignore
+.project
+.buildpath
+.settings/
+
+# stuff
+
+*.bak
+
