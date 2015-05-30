@@ -2,8 +2,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use LaravelBook\Ardent\Ardent;
 
-class Channel extends Model
+class Channel extends Ardent
 {
     
     use DatePresenter ;
