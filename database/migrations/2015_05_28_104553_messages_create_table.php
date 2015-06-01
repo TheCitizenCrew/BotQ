@@ -29,9 +29,10 @@ class MessagesCreateTable extends Migration
             $table->boolean('playloop');
             $table->string('content_type');
             $table->text('content');
-            $table->timestamp('status_got');
-            $table->timestamp('status_done');
-            $table->timestamp('status_aborted');
+            $table->timestamp('status_got')->nullable();
+            $table->timestamp('status_done')->nullable();
+            $table->timestamp('status_aborted')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

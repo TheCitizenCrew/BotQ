@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Database\Seeder;
+use Monolog\Handler\error_log;
 
 class ChannelsAndMessagesSeeder extends Seeder
 {
@@ -11,11 +12,16 @@ class ChannelsAndMessagesSeeder extends Seeder
         // DB::table('messages')->delete();
         
         $channel = \App\Models\Channel::create([
-            'Label' => 'Channel #1',
+            'label' => 'Channel #1',
             'description' => 'Une seed channel'
         ]);
-        $channel->save();
-        /*$msg = \App\Models\Message::create([
+        
+        if( ! $channel->id )
+        {
+            error_log(var_export($channel->getErrors(),true));            
+        }
+
+        $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #1',
             'priority' => 100,
@@ -23,9 +29,9 @@ class ChannelsAndMessagesSeeder extends Seeder
             'playloop' => false,
             'content_type' => 'application/url',
             'content' => 'http://sanibot.org',
-            'status_got' => null,
+            /*'status_got' => null,
             'status_done' => null,
-            'status_aborted' => null
-        ]);*/
+            'status_aborted' => null*/
+        ]);
     }
 }
