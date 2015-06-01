@@ -20,10 +20,15 @@ class MessagesCreateTable extends Migration
                 ->on('channels')
                 ->onDelete('cascade');
             $table->string('label');
+            // priorité entre messages
+            $table->smallInteger('priority');
+            // quand priorité supérieure, que faire de l'action précédente ?
+            // pause ou stop
+            $table->enum('concurentAction', ['pause', 'stop']);
+            // si aucune action à suivre, stop ou en boucle ?
+            $table->boolean('playloop');
             $table->string('content_type');
             $table->text('content');
-            $table->smallInteger('priority');
-            $table->string('concurentAction');
             $table->timestamp('status_got');
             $table->timestamp('status_done');
             $table->timestamp('status_aborted');
