@@ -34,11 +34,41 @@ $app->group([
 ], function ($app) {
     $app->get('stats', [
         'as' => 'ApiStats',
-        'uses' => 'App\Http\Controllers\ApiController@rentsCount'
+        'uses' => 'App\Http\Controllers\ApiController@stats'
+    ]);
+});
+
+$app->group([
+    'prefix' => 'channel'
+], function ($app) {
+    $app->get('{id:[0-9]+}', [
+        'as' => 'ChannelGet',
+        'uses' => 'App\Http\Controllers\ChannelController@channelGet'
+    ]);
+    $app->get('/new', [
+        'as' => 'ChannelNew',
+        'uses' => 'App\Http\Controllers\ChannelController@channelNew'
+    ]);
+    $app->get('{id:[0-9]+}/edit', [
+        'as' => 'ChannelEdit',
+        'uses' => 'App\Http\Controllers\ChannelController@channelEdit'
+    ]);
+    $app->post('', [
+        'as' => 'ChannelSave',
+        'uses' => 'App\Http\Controllers\ChannelController@channelSave'
+    ]);
+    $app->post('{id:[0-9]+}', [
+        'as' => 'ChannelUpdate',
+        'uses' => 'App\Http\Controllers\ChannelController@channelUpdate'
+    ]);
+    $app->delete('{id:[0-9]+}', [
+        'as' => 'ChannelDelete',
+        'uses' => 'App\Http\Controllers\ChannelController@channelDelete'
     ]);
 });
 
 /*
+
 $app->group( [ 'prefix' => 'rent' ], 
 	function ( Laravel\Lumen\Application $app )
 	{

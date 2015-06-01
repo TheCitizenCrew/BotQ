@@ -19,7 +19,7 @@
 		 GNU GENERAL PUBLIC LICENSE version 3</a> <a rel="license" href="http://www.gnu.org/licenses/gpl-3.0.txt">
 		<img alt="GNU GENERAL PUBLIC LICENSE version 3" style="border-width:0" src="https://www.gnu.org/graphics/gplv3-127x51.png" height="36px" /></a>.
 		</p>
-		<p>Le code source est disponible sur GitHub : <a href="https://github.com/TheCitizenCrew/RentsPrices">github.com/TheCitizenCrew/RentsPrices</a>.
+		<p>Le code source est disponible sur GitHub : <a href="https://github.com/TheCitizenCrew/BotQ">github.com/TheCitizenCrew/BotQ</a>.
 		</p>
   </div>
 </div>

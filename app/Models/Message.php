@@ -1,16 +1,24 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use LaravelBook\Ardent\Ardent;
+use \Illuminate\Database\Eloquent\Model;
+use \Esensi\Model\Contracts\ValidatingModelInterface;
+use \Esensi\Model\Traits\ValidatingModelTrait;
+use \Esensi\Model\Traits\SoftDeletingModelTrait;
 
-class Message extends Ardent
+class Message extends Model
 {
-    
+
     use DatePresenter ;
 
+    // https://github.com/esensi/model#validating-model-trait
+    use ValidatingModelTrait;
+    
+    // https://github.com/esensi/model#soft-deleting-model-trait
+    use SoftDeletingModelTrait ;
+    
     /**
-     * Get it's Channel
+     * Get Message's Channel
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

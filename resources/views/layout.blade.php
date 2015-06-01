@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" /> 
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Prix des Loyers - @yield('title', 'BotQ')</title>
+		<title>BotQ - @yield('title', 'Home')</title>
 		<meta name="description" content="BotQ manage an actions pool for some robots" />
 		<meta name="author" content="The Citizen Crew & Co, Cyrille Giquello" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />

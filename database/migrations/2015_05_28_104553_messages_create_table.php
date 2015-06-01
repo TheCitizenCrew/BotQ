@@ -28,6 +28,7 @@ class MessagesCreateTable extends Migration
             $table->timestamp('status_done');
             $table->timestamp('status_aborted');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

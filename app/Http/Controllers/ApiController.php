@@ -3,8 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Rent;
-use App\Models\RentPrice;
+use App\Models\Channel;
+use App\Models\Message;
 
 /**
  *
@@ -21,4 +21,6 @@ class ApiController extends Controller
         );
         return response()->json($stats);
     }
+
+
 }
