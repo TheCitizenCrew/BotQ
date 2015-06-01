@@ -19,7 +19,7 @@ class MessagesCreateTable extends Migration
                 ->references('id')
                 ->on('channels')
                 ->onDelete('cascade');
-            $table->string('label');
+            $table->string('label', \App\Models\Message::LABEL_LENGTH);
             // priorité entre messages
             $table->smallInteger('priority');
             // quand priorité supérieure, que faire de l'action précédente ?

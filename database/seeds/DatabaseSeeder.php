@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder {
 	{
 		Model::unguard();
 
-		//$this->call('SomeTableSeeder');
+		$this->call('ChannelsAndMessagesSeeder');
 	}
 
 }
