@@ -11,6 +11,10 @@ class ChannelController extends BaseController
     public function channelList()
     {
         $channels = Channel::all();
+        foreach( $channels as $channel)
+        {
+            $channel->messagesCount = $channel->messages()->count();
+        }
         return view('channelList', ['channels'=>$channels]);
     }
 

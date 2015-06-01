@@ -10,11 +10,13 @@
 <tr>
     <th>Label</th>
     <th>Description</th>
+    <th>Msgs count</th>
 </tr>
 @foreach ($channels as $channel)
     <tr>
         <td><a href="{{ app('url')->route('ChannelGet', ['id'=>$channel->id]) }}">{{ $channel->label }}</a></td>
-        <td>{{ $channel->description }}</a></td>
+        <td>{{ $channel->description }}</td>
+        <td>{{ $channel->messagesCount }}</td>
     </tr>
 @endforeach
 </table>
