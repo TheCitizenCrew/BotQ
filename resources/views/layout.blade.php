@@ -37,7 +37,8 @@
 		    <!-- Collect the nav links, forms, and other content for toggling -->
 		    <div class="collapse navbar-collapse" id="navbar-items-collapse" >
 		      <ul class="nav navbar-nav">
-		        <li><a href="/about">À propos</a></li>
+            <li><a href="/channel/list">Channels</a></li>
+            <li><a href="/about">À propos</a></li>
 		      </ul>
 				</div>
 

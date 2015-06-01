@@ -7,12 +7,18 @@ use App\Models\Message;
 
 class ChannelController extends BaseController
 {
+    public function channelList()
+    {
+        $channels = Channel::all();
+        return view('channelList', ['channels'=>$channels]);
+    }
+
     public function channelGet($id)
     {
         $channel = Channel::findOrFail($id);
         return view('channelView', ['channel'=>$channel]);
     }
-    
+
     public function channelNew()
     {
         return $this->channelEdit();

@@ -5,7 +5,7 @@
 
 @section('content')
 
-<h2>Channel</h2>
+<h1>Channel</h1>
 <ul>
 <li> {{ $channel->label }} </li>
 <li> {{ $channel->description }} </li>

@@ -41,6 +41,10 @@ $app->group([
 $app->group([
     'prefix' => 'channel'
 ], function ($app) {
+    $app->get('/list', [
+        'as' => 'ChannelList',
+        'uses' => 'App\Http\Controllers\ChannelController@channelList'
+    ]);
     $app->get('{id:[0-9]+}', [
         'as' => 'ChannelGet',
         'uses' => 'App\Http\Controllers\ChannelController@channelGet'
