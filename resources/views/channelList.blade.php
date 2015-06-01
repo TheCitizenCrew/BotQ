@@ -19,6 +19,8 @@
 @endforeach
 </table>
 
+<a href="{{ app('url')->route('ChannelNew') }}">Nouveau</a>
+
 @stop
 
 @section('javascript')

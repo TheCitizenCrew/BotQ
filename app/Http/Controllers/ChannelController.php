@@ -2,6 +2,7 @@
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input ;
 use App\Models\Channel;
 use App\Models\Message;
 
@@ -23,8 +24,8 @@ class ChannelController extends BaseController
     {
         return $this->channelEdit();
     }
-        
-    protected function channelEdit( $id=null )
+
+    public function channelEdit( $id=null )
     {
         if( empty($id) )
         {
@@ -35,46 +36,45 @@ class ChannelController extends BaseController
             $channel = Channel::findOrFail($id);
     
         }
-        //return response()->json($channel);
         return view('channelEdit', ['channel'=>$channel]);
-        
     }
-    
+
     public function channelSave( Request $request )
     {
-        return $this->update( $request , null);
+        return $this->store( $request , null);
     }
-    
+
     public function channelUpdate(Request $request, $id)
     {
-        return $this->update( $request, $id );
+        return $this->store( $request, $id );
     }
-    
-    protected function update( Request $request, $id )
+
+    protected function store( Request $request, $id )
     {
         // Create a new Channel or retreive the one with $id
-    
+
+        $attributes = Input::only( 'label', 'description' );
+
         if( empty($id) )
         {
-            $channel = \App\Models\Channel::create( $request->all() );
+            $channel = \App\Models\Channel::create( $attributes );
         }
         else
         {
             $channel = \App\Models\Channel::findOrFail( $id );
-            $channel->fill( $request->all() );
+            $channel->fill( $attributes );
         }
 
         if( ! $channel->save() )
         {
             return view('channelEdit', ['channel'=>$channel])
                 ->withErrors( $channel->getErrors() )
-                ->withInput();
+                ;//->withInput();
         }
-    
-        
+
         return redirect( 'channel/' . $channel->id );
     }
-    
+
     public function channelDelete($id)
     {
         $channel = \App\Models\Channel::findOrFail( $id );
@@ -82,6 +82,5 @@ class ChannelController extends BaseController
 
         return route('Home');
     }
-    
 
 }

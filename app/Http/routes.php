@@ -24,6 +24,7 @@ $app->get('/', [
     'as' => 'Home',
     'uses' => 'App\Http\Controllers\Controller@home'
 ]);
+
 $app->get('/about', [
     'as' => 'About',
     'uses' => 'App\Http\Controllers\Controller@about'
@@ -81,7 +82,6 @@ $app->group( [ 'prefix' => 'rent' ],
 		$app->get( '{id:[0-9]+}/edit', ['as'=>'RentEdit', 'uses'=>'App\Http\Controllers\RentController@edit'] );
 		$app->post( '', ['as'=>'RentSave', 'uses'=>'App\Http\Controllers\RentController@save'] );
 		$app->post( '{id:[0-9]+}', ['as'=>'RentUpdate','uses'=>'App\Http\Controllers\RentController@update'] );
-
 	} );
 
 $app->group( [ 'prefix' => 'api' ],

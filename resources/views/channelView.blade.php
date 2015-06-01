@@ -11,6 +11,8 @@
 <li> {{ $channel->description }} </li>
 </ul>
 
+<a href="{{ app('url')->route('ChannelEdit', ['id'=>$channel->id]) }}">Edit</a>
+
 @stop
 
 @section('javascript')
