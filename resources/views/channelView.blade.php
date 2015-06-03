@@ -18,30 +18,37 @@
 <tr>
     <th>Label</th>
     <td>priority</td>
-    <td>concurentAction</td>
-    <td>playloop</td>
+    <td>concurent action</td>
+    <td>play loop</td>
+    <td>play at time</td>
     <td>content_type</td>
     <td>content</td>
     <td>status_got</td>
     <td>status_done</td>
     <td>status_aborted</td>
-</tr>
+    <td>actions</td>
+    </tr>
 @foreach ($channel->messages as $message)
     <tr>
     @if ($msgid!=null)
         <td colspan="9">
             {{ App::make('App\Http\Controllers\MessageController')->edit($message->id) }}
         </td>
+        <td></td>
     @else
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
-        <td>{{ $message->concurentAction }}</td>
-        <td>{{ $message->playloop }}</td>
+        <td>{{ $message->concurent_action }}</td>
+        <td>{{ $message->play_loop }}</td>
+        <td>{{ $message->play_at_time }}</td>
         <td>{{ $message->content_type }}</td>
         <td>{{ $message->content }}</td>
         <td>{{ $message->status_got }}</td>
         <td>{{ $message->status_done }}</td>
         <td>{{ $message->status_aborted }}</td>
+        <td>
+            <a href="">edit</a>
+        </td>
     @endif
     </tr>
 @endforeach

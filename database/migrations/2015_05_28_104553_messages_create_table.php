@@ -24,9 +24,10 @@ class MessagesCreateTable extends Migration
             $table->smallInteger('priority');
             // quand priorité supérieure, que faire de l'action précédente ?
             // pause ou stop
-            $table->enum('concurentAction', ['pause', 'stop']);
+            $table->enum('concurent_action', ['pause', 'stop'])->default('pause');
             // si aucune action à suivre, stop ou en boucle ?
-            $table->boolean('playloop');
+            $table->boolean('play_loop')->default(false);
+            $table->time('play_at_time')->nullable();
             $table->string('content_type');
             $table->text('content');
             $table->timestamp('status_got')->nullable();
