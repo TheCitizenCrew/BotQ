@@ -18,10 +18,10 @@ class ChannelController extends BaseController
         return view('channelList', ['channels'=>$channels]);
     }
 
-    public function channelGet($id)
+    public function channelGet($id,$msgid=null)
     {
         $channel = Channel::findOrFail($id);
-        return view('channelView', ['channel'=>$channel]);
+        return view('channelView', ['channel'=>$channel, 'msgid'=>$msgid]);
     }
 
     public function channelNew()
@@ -45,15 +45,15 @@ class ChannelController extends BaseController
 
     public function channelSave( Request $request )
     {
-        return $this->store( $request , null);
+        return $this->channelStore( $request , null);
     }
 
     public function channelUpdate(Request $request, $id)
     {
-        return $this->store( $request, $id );
+        return $this->channelStore( $request, $id );
     }
 
-    protected function store( Request $request, $id )
+    protected function channelStore( Request $request, $id )
     {
         // Create a new Channel or retreive the one with $id
 

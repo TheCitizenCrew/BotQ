@@ -28,6 +28,11 @@
 </tr>
 @foreach ($channel->messages as $message)
     <tr>
+    @if ($msgid!=null)
+        <td colspan="9">
+            {{ App::make('App\Http\Controllers\MessageController')->edit($message->id) }}
+        </td>
+    @else
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
         <td>{{ $message->concurentAction }}</td>
@@ -37,6 +42,7 @@
         <td>{{ $message->status_got }}</td>
         <td>{{ $message->status_done }}</td>
         <td>{{ $message->status_aborted }}</td>
+    @endif
     </tr>
 @endforeach
 </table>
