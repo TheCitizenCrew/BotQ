@@ -50,7 +50,7 @@ $app->group([
         'as' => 'ChannelGet',
         'uses' => 'App\Http\Controllers\ChannelController@channelGet'
     ]);
-    $app->get('{id:[0-9]+}/{msgid:[0-9]+}', [
+    $app->get('{id:[0-9]+}/{editMsgId:[0-9]+}', [
         'as' => 'ChannelGet',
         'uses' => 'App\Http\Controllers\ChannelController@channelGet'
     ]);

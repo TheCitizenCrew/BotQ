@@ -30,11 +30,13 @@
     </tr>
 @foreach ($channel->messages as $message)
     <tr>
-    @if ($msgid!=null)
-        <td colspan="9">
+    @if ($editMsgId!=null)
+        <td colspan="10">
             {{ App::make('App\Http\Controllers\MessageController')->edit($message->id) }}
         </td>
-        <td></td>
+        <td>
+            <a href="/channel/{{$channel->id}}">cancel</a>
+        </td>
     @else
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
@@ -47,7 +49,7 @@
         <td>{{ $message->status_done }}</td>
         <td>{{ $message->status_aborted }}</td>
         <td>
-            <a href="">edit</a>
+            <a href="/channel/{{$channel->id}}/{{$message->id}}">edit</a>
         </td>
     @endif
     </tr>

@@ -18,10 +18,10 @@ class ChannelController extends BaseController
         return view('channelList', ['channels'=>$channels]);
     }
 
-    public function channelGet($id,$msgid=null)
+    public function channelGet($id,$editMsgId=null)
     {
         $channel = Channel::findOrFail($id);
-        return view('channelView', ['channel'=>$channel, 'msgid'=>$msgid]);
+        return view('channelView', ['channel'=>$channel, 'editMsgId'=>$editMsgId]);
     }
 
     public function channelNew()
