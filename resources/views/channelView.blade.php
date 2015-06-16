@@ -18,14 +18,14 @@
     <tr>
         <th>Label</th>
         <td>priority</td>
-        <td>concurent action</td>
+        <td>priority action</td>
         <td>play loop</td>
         <td>play at time</td>
         <td>content_type</td>
         <td>content</td>
-        <td>status_got</td>
-        <td>status_done</td>
-        <td>status_aborted</td>
+        <td>status got</td>
+        <td>status done</td>
+        <td>status aborted</td>
         <td>actions</td>
     </tr>
     @foreach ($channel->messages as $message)
@@ -33,7 +33,7 @@
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
         <td>{{ $message->priority_action }}</td>
-        <td>{{ $message->play_loop }}</td>
+        <td>@if( $message->play_loop == '1') On @else Off @endif</td>
         <td>{{ $message->play_at_time }}</td>
         <td>{{ $message->content_type }}</td>
         <td>{{ $message->content }}</td>

@@ -8,7 +8,7 @@ use \Esensi\Model\Traits\SoftDeletingModelTrait;
 
 class Message extends Model implements ValidatingModelInterface 
 {
-    const LABEL_LENGTH = 255 ;
+    const LABEL_LENGTH = 45 ;
     
     use DatePresenter ;
 
@@ -28,9 +28,11 @@ class Message extends Model implements ValidatingModelInterface
      * @var array
      */
     protected $rules = [
-        'label' => [ 'required','min:1','max:45' ]
+        'label' => [ 'required','min:1','max:45' ],
+        'content_type' => [ 'required','min:4' ],
+        'content' => [ 'required' ]
     ];
-    
+
     /**
      * Permit mass assignement with those fields.
      * Avoid Illuminate\Database\Eloquent\MassAssignmentException.
