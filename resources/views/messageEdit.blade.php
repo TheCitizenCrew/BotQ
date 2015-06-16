@@ -122,15 +122,16 @@
         </div>
     </div>
 
-</form>
-<br />
+    <br />
+    
+    @if(empty($message->id))
+        <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
+    @else
+        <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
+    @endif
+    <button type="submit" class="btn btn-success">Enregistrer</button>
 
-@if(empty($message->id))
-    <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
-@else
-    <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
-@endif
-<button type="submit" class="btn btn-success">Enregistrer</button>
+</form>
 
 @stop
 

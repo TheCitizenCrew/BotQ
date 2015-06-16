@@ -49,7 +49,8 @@ class MessageController extends BaseController
     {
         // Create a new Channel or retreive the one with $id
 
-        $attributes = Input::only( 'label' );
+        //$attributes = Input::only( 'label' );
+        $attributes = Input::all();
 
         if( empty($id) )
         {
@@ -68,7 +69,7 @@ class MessageController extends BaseController
                 ;//->withInput();
         }
 
-        return redirect( 'message/' . $message->id );
+        return redirect( route('ChannelGet', ['id'=>$message->channel_id]) );
     }
 
     public function delete($id)
@@ -77,7 +78,7 @@ class MessageController extends BaseController
         $channelId = $message->channel_id ;
         $message->delete();
 
-        return route('ChannelView', ['id'=>$channel_id]);
+        return redirect( route('ChannelGet', ['id'=>$channel_id]) );
     }
     
 }

@@ -36,7 +36,7 @@ class Message extends Model implements ValidatingModelInterface
      * Avoid Illuminate\Database\Eloquent\MassAssignmentException.
      * @var array
      */
-    protected $fillable = ['label', 'description'];
+    protected $fillable = ['channel_id', 'label', 'priority', 'priority_action', 'play_loop', 'play_at_time', 'content_type', 'content'];
     
     /**
      * Get Message's Channel
