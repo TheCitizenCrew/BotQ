@@ -27,22 +27,24 @@
 			</div>
 		</div>
 		<div
-			class="form-group @if($errors->first('label'))has-error @endif">
+			class="form-group @if($errors->first('description'))has-error @endif">
 			<label for="description" class="col-sm-1 control-label">Description</label>
 			<div class="col-sm-6">
 				@if ($errors->first('description'))
 				<p class="text-danger">error {{$errors->first('description')}}</p>
 				@endif
 				<textarea class="form-control" name="description"
-					id="description" placeholder="Description" >
-					{{ $channel->description }}
-				</textarea>
+					id="description" placeholder="Description" >{{ $channel->description }}</textarea>
 			</div>
 		</div>
 
-		<br /> <a
-			href="{{ app('url')->route('Home') }}"
-			class="btn btn-warning">Annuler</a>
+		<br />
+		
+		@if(empty($channel->id))
+		  <a href="{{ app('url')->route('Home') }}" class="btn btn-warning">Annuler</a>
+		@else
+		  <a href="{{ app('url')->route('ChannelGet', ['id'=>$channel->id]) }}" class="btn btn-warning">Annuler</a>
+		@endif
 		<button type="submit" class="btn btn-success">Enregistrer</button>
 
 </form>

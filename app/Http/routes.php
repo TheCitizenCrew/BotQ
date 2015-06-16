@@ -42,37 +42,66 @@ $app->group([
 $app->group([
     'prefix' => 'channel'
 ], function ($app) {
-    $app->get('/list', [
-        'as' => 'ChannelList',
-        'uses' => 'App\Http\Controllers\ChannelController@channelList'
+    $app->get('/all', [
+        'as' => 'ChannelAll',
+        'uses' => 'App\Http\Controllers\ChannelController@all'
     ]);
     $app->get('{id:[0-9]+}', [
         'as' => 'ChannelGet',
-        'uses' => 'App\Http\Controllers\ChannelController@channelGet'
-    ]);
-    $app->get('{id:[0-9]+}/{editMsgId:[0-9]+}', [
-        'as' => 'ChannelGet',
-        'uses' => 'App\Http\Controllers\ChannelController@channelGet'
+        'uses' => 'App\Http\Controllers\ChannelController@get'
     ]);
     $app->get('/new', [
         'as' => 'ChannelNew',
-        'uses' => 'App\Http\Controllers\ChannelController@channelNew'
+        'uses' => 'App\Http\Controllers\ChannelController@edit'
     ]);
     $app->get('{id:[0-9]+}/edit', [
         'as' => 'ChannelEdit',
-        'uses' => 'App\Http\Controllers\ChannelController@channelEdit'
+        'uses' => 'App\Http\Controllers\ChannelController@edit'
     ]);
     $app->post('', [
         'as' => 'ChannelSave',
-        'uses' => 'App\Http\Controllers\ChannelController@channelSave'
+        'uses' => 'App\Http\Controllers\ChannelController@save'
     ]);
     $app->post('{id:[0-9]+}', [
         'as' => 'ChannelUpdate',
-        'uses' => 'App\Http\Controllers\ChannelController@channelUpdate'
+        'uses' => 'App\Http\Controllers\ChannelController@update'
     ]);
     $app->delete('{id:[0-9]+}', [
         'as' => 'ChannelDelete',
-        'uses' => 'App\Http\Controllers\ChannelController@channelDelete'
+        'uses' => 'App\Http\Controllers\ChannelController@delete'
+    ]);
+});
+
+$app->group([
+    'prefix' => 'message'
+], function ($app) {
+    $app->get('/{channelId:[0-9]+}/list', [
+        'as' => 'MessageAll',
+        'uses' => 'App\Http\Controllers\MessageController@all'
+    ]);
+    $app->get('{id:[0-9]+}', [
+        'as' => 'MessageGet',
+        'uses' => 'App\Http\Controllers\MessageController@get'
+    ]);
+    $app->get('/{channelId:[0-9]+}/new', [
+        'as' => 'MessageNew',
+        'uses' => 'App\Http\Controllers\MessageController@edit'
+    ]);
+    $app->get('{id:[0-9]+}/edit', [
+        'as' => 'MessageEdit',
+        'uses' => 'App\Http\Controllers\MessageController@edit'
+    ]);
+    $app->post('', [
+        'as' => 'MessageSave',
+        'uses' => 'App\Http\Controllers\MessageController@save'
+    ]);
+    $app->post('{id:[0-9]+}', [
+        'as' => 'MessageUpdate',
+        'uses' => 'App\Http\Controllers\MessageController@update'
+    ]);
+    $app->delete('{id:[0-9]+}', [
+        'as' => 'MessageDelete',
+        'uses' => 'App\Http\Controllers\MessageController@delete'
     ]);
 });
 

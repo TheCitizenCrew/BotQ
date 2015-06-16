@@ -15,32 +15,24 @@
 
 <h2>Messages</h2>
 <table class="table table-striped table-bordered">
-<tr>
-    <th>Label</th>
-    <td>priority</td>
-    <td>concurent action</td>
-    <td>play loop</td>
-    <td>play at time</td>
-    <td>content_type</td>
-    <td>content</td>
-    <td>status_got</td>
-    <td>status_done</td>
-    <td>status_aborted</td>
-    <td>actions</td>
-    </tr>
-@foreach ($channel->messages as $message)
     <tr>
-    @if ($editMsgId!=null)
-        <td colspan="10">
-            {{ App::make('App\Http\Controllers\MessageController')->edit($message->id) }}
-        </td>
-        <td>
-            <a href="/channel/{{$channel->id}}">cancel</a>
-        </td>
-    @else
+        <th>Label</th>
+        <td>priority</td>
+        <td>concurent action</td>
+        <td>play loop</td>
+        <td>play at time</td>
+        <td>content_type</td>
+        <td>content</td>
+        <td>status_got</td>
+        <td>status_done</td>
+        <td>status_aborted</td>
+        <td>actions</td>
+    </tr>
+    @foreach ($channel->messages as $message)
+    <tr>
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
-        <td>{{ $message->concurent_action }}</td>
+        <td>{{ $message->priority_action }}</td>
         <td>{{ $message->play_loop }}</td>
         <td>{{ $message->play_at_time }}</td>
         <td>{{ $message->content_type }}</td>
@@ -49,11 +41,10 @@
         <td>{{ $message->status_done }}</td>
         <td>{{ $message->status_aborted }}</td>
         <td>
-            <a href="/channel/{{$channel->id}}/{{$message->id}}">edit</a>
+            <a href="{{ app('url')->route('MessageEdit', ['id'=>$message->id]) }}">edit</a>
         </td>
-    @endif
     </tr>
-@endforeach
+    @endforeach
 </table>
 
 @stop

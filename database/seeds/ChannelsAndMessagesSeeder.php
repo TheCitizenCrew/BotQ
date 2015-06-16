@@ -25,7 +25,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             'channel_id' => $channel->id,
             'label' => 'msg #1',
             'priority' => 100,
-            'concurent_action' => 'stop',
+            'priority_action' => 'stop',
             'play_loop' => false,
             'content_type' => 'application/url',
             'content' => 'http://sanibot.org',

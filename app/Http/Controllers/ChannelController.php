@@ -8,7 +8,7 @@ use App\Models\Message;
 
 class ChannelController extends BaseController
 {
-    public function channelList()
+    public function all()
     {
         $channels = Channel::all();
         foreach( $channels as $channel)
@@ -18,18 +18,13 @@ class ChannelController extends BaseController
         return view('channelList', ['channels'=>$channels]);
     }
 
-    public function channelGet($id,$editMsgId=null)
+    public function get($id)
     {
         $channel = Channel::findOrFail($id);
-        return view('channelView', ['channel'=>$channel, 'editMsgId'=>$editMsgId]);
+        return view('channelView', ['channel'=>$channel]);
     }
 
-    public function channelNew()
-    {
-        return $this->channelEdit();
-    }
-
-    public function channelEdit( $id=null )
+    public function edit( $id=null )
     {
         if( empty($id) )
         {
@@ -43,17 +38,17 @@ class ChannelController extends BaseController
         return view('channelEdit', ['channel'=>$channel]);
     }
 
-    public function channelSave( Request $request )
+    public function save( Request $request )
     {
-        return $this->channelStore( $request , null);
+        return $this->store( $request , null);
     }
 
-    public function channelUpdate(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        return $this->channelStore( $request, $id );
+        return $this->store( $request, $id );
     }
 
-    protected function channelStore( Request $request, $id )
+    protected function store( Request $request, $id )
     {
         // Create a new Channel or retreive the one with $id
 
@@ -79,7 +74,7 @@ class ChannelController extends BaseController
         return redirect( 'channel/' . $channel->id );
     }
 
-    public function channelDelete($id)
+    public function delete($id)
     {
         $channel = \App\Models\Channel::findOrFail( $id );
         $channel->delete();
