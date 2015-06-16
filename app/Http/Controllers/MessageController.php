@@ -21,11 +21,12 @@ class MessageController extends BaseController
         return view('messageView', ['message'=>$message]);
     }
 
-    public function edit( $id=null )
+    public function edit( $id=null, $channelId=null )
     {
         if( empty($id) )
         {
             $message = new Message();
+            $message->channel_id = $channelId ;
         }
         else
         {

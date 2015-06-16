@@ -7,10 +7,10 @@
 
 @if(empty($message->id))
     <h2>Créer un message</h2>
-    <form class="form-horizontal" method="POST" action="/channel">
+    <form class="form-horizontal" method="POST" action="/message">
 @else
     <h2>Modifier un message</h2>
-    <form class="form-horizontal" method="POST" action="/channel/{{$message->id}}">
+    <form class="form-horizontal" method="POST" action="/message/{{$message->id}}">
 @endif
     <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
     <input type="hidden" name="channel_id" id="channel_id" value="{{ $message->channel_id }}" />
@@ -123,6 +123,14 @@
     </div>
 
 </form>
+<br />
+
+@if(empty($message->id))
+    <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
+@else
+    <a href="{{ app('url')->route('ChannelGet', ['id'=>$message->channel_id]) }}" class="btn btn-warning">Annuler</a>
+@endif
+<button type="submit" class="btn btn-success">Enregistrer</button>
 
 @stop
 

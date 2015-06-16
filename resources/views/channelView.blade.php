@@ -47,6 +47,8 @@
     @endforeach
 </table>
 
+<a href="{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}">new message</a>
+
 @stop
 
 @section('javascript')
