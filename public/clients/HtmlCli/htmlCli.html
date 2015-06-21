@@ -5,18 +5,39 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <title>HtmlCli</title>
 <link href="/js/require.css" rel="stylesheet" type="text/css" />
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font-weight: normal;
+	background-color: black;
+}
+</style>
 </head>
 <body>
-
+<div id="playground"></div>
 <script src="/js/require.js"></script>
+<script src="htmlCliCommon.js"></script>
 <script>
 "use strict" ;
+
+var worker = null ;
+
 require(['jquery'], function($) {
 
-	$('body').css('background-color', 'black');
+	worker = new Worker('htmlCliWorker.js');
+	worker.addEventListener('message', workerOnMessage, false);
+	worker.postMessage({cmd: 'start'}); // Send data to our worker.
 
 });
 
+function workerOnMessage(e)
+{
+	console.log('htmlCli received a message:')
+	console.log(e.data);
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Essai07</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--
+fonctionnement sur ARNOVA 10b G3 :
+	Chrome : 
+	Navigateur : 
+	Dolphin :   
+	
+ -->
+
+<div id="playground"></div>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+var worker ;
+require(['jquery','jplayer'], function($) {
+
+	$('body').css('background-color', 'green');
+	
+	phase1();
+});
+
+var nextPhase = null ;
+
+function phase1()
+{
+	setVideo('https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download');
+	nextPhase = phase2;
+}
+
+function phase2()
+{
+	setVideo('http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v');
+	nextPhase = phase1;
+}
+
+function videoReady()
+{
+	setTimeout( nextPhase, 4000 );
+}
+
+function setVideo( url )
+{
+	$('#playground').html(
+		'<div id="jp_container" class="jp-video " role="application" aria-label="media player"><div class="jp-type-single"><div id="jquery_jplayer" class="jp-jplayer"></div></div></div>'
+	);
+
+    $("#jquery_jplayer").jPlayer({
+        ready: function () {
+        	console.log('jPlayer.ready');
+          $(this).jPlayer("setMedia", {
+            title: 'Some video',
+            m4v: url,
+            poster: 'http://vignette3.wikia.nocookie.net/teamumizoomi/images/1/17/Bot.png/revision/latest?cb=20110529202036'
+          }).jPlayer("play");
+          
+        },
+        ended: function(){
+        	console.log('jPlayer.ended');
+        	//$(this).jPlayer("play"); // play again !
+       	},
+       	progress: function(data){
+        	console.log('jPlayer.progress');
+        	console.log(data);
+       	},
+       	loadedmetadata: function(){
+        	console.log('jPlayer.loadedmetadata');       		
+       	},
+       	loadeddata: function(){
+        	console.log('jPlayer.loadeddata');
+        	videoReady();
+       	},
+       	waiting: function(){
+        	console.log('jPlayer.waiting');       		
+       	},
+        cssSelectorAncestor: "#jp_container",
+        preload: "auto",
+        supplied: "m4v",
+        solution: 'html',
+        size: {
+            width: ""+window.innerWidth + "px",
+            height: ""+window.innerHeight + "px"
+       },
+
+	});
+}
+
+</script>
+</body>
+</html>

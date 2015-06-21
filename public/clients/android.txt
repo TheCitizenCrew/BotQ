@@ -1,0 +1,21 @@
+
+Pour TTS Text To Speech
+
+- un server tpc ou udp groupcast
+
+NanoHttpd
+ Tiny, easily embeddable HTTP server in Java.
+	http://nanohttpd.org
+	https://github.com/NanoHttpd/nanohttpd
+
+References:
+	https://developer.android.com/reference/org/apache/http/package-summary.html
+
+Billets:
+
+Simple-Http-Server-To-Send-CameraPicture-to-the-browser-over-Home-network-WIFI
+https://github.com/lacasrac/Simple-Http-Server-To-Send-CameraPicture-to-the-browser-over-Home-network-WIFI
+
+http://www.helloandroid.com/tutorials/simple-connection-example-part-ii-tcp-communication
+http://androidituts.com/android-udp-client-server-example/
+

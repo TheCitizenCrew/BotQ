@@ -1,5 +1,7 @@
 <?php
 
+//setlocale( LC_ALL, 'Europe/Paris');
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 Dotenv::load(__DIR__.'/../');
