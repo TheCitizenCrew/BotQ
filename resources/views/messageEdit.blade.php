@@ -103,10 +103,11 @@
 			</div>
 		</div>
 
-    <div class="form-group">
-        <label for="label" class="col-sm-1 control-label">status_got</label>
+    <div class="form-group @if($errors->first('status_got'))has-error @endif">
+        <label for="status_got" class="col-sm-1 control-label">status_got</label>
         <div class="col-sm-6">
-            <input class="form-control" type="datetime" placeholder="{{ $message->status_got }}" readonly />
+			@if ($errors->first('status_got'))<p class="text-danger">error {{$errors->first('status_got')}}</p>@endif
+            <input class="form-control" type="datetime" name="status_got" id="status_got" placeholder="datetime" value="{{ $message->status_got }}"  />
         </div>
     </div>
     <div class="form-group">

@@ -41,7 +41,7 @@ class Message extends Model implements ValidatingModelInterface
     protected $fillable = [
         'channel_id',
         'label',
-        'priority', 'priority_action', 'play_loop', 'play_at_time', 'content_type', 'content'];
+        'priority', 'priority_action', 'play_loop', 'play_at_time', 'content_type', 'content', 'status_got'];
     
     /**
      * Get Message's Channel
@@ -60,7 +60,7 @@ class Message extends Model implements ValidatingModelInterface
     
     public function scopeNotDone($query )
     {
-        return $query->where('status_done', '=', null);
+        return $query->where('status_got', '=', null);
     }
     
     
