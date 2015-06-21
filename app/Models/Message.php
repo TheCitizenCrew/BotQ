@@ -60,9 +60,8 @@ class Message extends Model implements ValidatingModelInterface
     
     public function scopeNotDone($query )
     {
-        return $query->where('status_got', '=', null);
+        return $query->where('status_got', '=', '');
     }
-    
     
     public static function getMessagesSet($channelId)
     {
@@ -75,4 +74,15 @@ class Message extends Model implements ValidatingModelInterface
             ->get();
     }
 
+    public static function setMessageStatusGot($channelId, $messageId)
+    {
+        $m = Message::find($messageId);
+        if( $m->channel_id != $channelId)
+            throw new Exception('Channel does not match '.$channelId.' '.$messageId);
+        //$m->status_got = \Carbon\Carbon::now('Europe/Paris');
+        //$m->status_got = \Carbon\Carbon::now();
+        $m->status_got = new \Carbon\Carbon ;
+        $m->save();
+        return $m ;
+    }
 }
