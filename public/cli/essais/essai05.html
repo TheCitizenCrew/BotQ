@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Essai05</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<!--  
+Some tips :
+
+	http://www.html5rocks.com/en/mobile/fullscreen/
+
+ -->
+<button id="goFS">Full screen</button>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+require(['jquery'], function($) {
+
+	$('body').css('background-color', 'black');
+
+	$('#goFS').on( 'click', function() {
+		var docEl = window.document.documentElement;
+		var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+		requestFullScreen.call(docEl);
+	});
+});
+
+</script>
+</body>
+</html>
