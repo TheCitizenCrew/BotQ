@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Essai06</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--
+fonctionnement sur ARNOVA 10b G3 :
+	Chrome : OUI
+	Navigateur : NON
+	Dolphin : OUI  
+
+Documentation:
+	The Basics of Web Workers http://www.html5rocks.com/en/tutorials/workers/basics/
+	
+ -->
+<button id="postMessage">postMessage</button>
+<button id="timerToggle">timerToggle</button>
+<p id="text"></p>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+var worker ;
+require(['jquery'], function($) {
+
+	$('body').css('background-color', 'green');
+	$('#text').css('background-color', 'white');
+
+	worker = new Worker('essai06worker.js');
+
+	worker.addEventListener('message', function(e) {
+		//console.log('Worker said: ', e.data);
+		$('#text').html( $('#text').html() + '<br/>' + e.data);
+	}, false);
+
+	$('#postMessage').on('click', function() {
+		worker.postMessage({'cmd': 'say', 'msg': 'Hello World'}); // Send data to our worker.		
+	});
+	$('#timerToggle').on('click', function() {
+		worker.postMessage({'cmd': 'timerToggle'});		
+	});
+});
+
+</script>
+</body>
+</html>

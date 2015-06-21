@@ -4,19 +4,15 @@
 <meta charset="UTF-8">
 <title>Essai04</title>
 <link href="/js/require.css" rel="stylesheet" type="text/css">
-<style>
-html, body {
-width: 100%;
-height: 100%;
-margin: 0px;
-border: 0;
-overflow: hidden; /*  Disable scrollbars */
-display: block;  /* No floating content on sides */
-}
-</style>
 </head>
 <body>
 
+<!--
+fonctionnement sur ARNOVA 10b G3 :
+	Chrome : NON
+	Navigateur : OUI
+	Dolphin : OUI  
+ -->
 <div id="jp_container" class="jp-video " role="application" aria-label="media player">
   <div class="jp-type-single">
     <div id="jquery_jplayer" class="jp-jplayer"></div>
@@ -36,9 +32,10 @@ require(['jquery','jplayer'], function($) {
     $("#jquery_jplayer").jPlayer({
         ready: function () {
           $(this).jPlayer("setMedia", {
-            title: "Some video",
-            m4v: "https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download"
-          }).jPlayer("play");;
+            title: 'Some video',
+            m4v: 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download',
+            poster: 'http://vignette3.wikia.nocookie.net/teamumizoomi/images/1/17/Bot.png/revision/latest?cb=20110529202036'
+          }).jPlayer("play");
         },
         ended: function(){
         	$(this).jPlayer("play"); // play again !
@@ -53,7 +50,7 @@ require(['jquery','jplayer'], function($) {
        },
 
 	});
-    
+
 });
 
 </script>
