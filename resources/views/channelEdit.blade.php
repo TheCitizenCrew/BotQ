@@ -56,8 +56,6 @@
 	<script>
 	"use strict" ;
 
-	$(function() {
-	});
 	</script>
 
 @stop

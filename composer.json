@@ -9,6 +9,7 @@
 				"vlucas/phpdotenv": "~1.0",
 				"esensi/model": "0.5.*",
 				"components/jquery": "2.1.*",
+				"happyworm/jplayer": "2.9.*",
 				"twitter/bootstrap": "3.3.*"
     },
     "require-dev": {
@@ -28,6 +29,8 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+	"component-dir": "public/js",
+	"component-baseurl": "/js"
     }
 }

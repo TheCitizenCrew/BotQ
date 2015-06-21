@@ -10,7 +10,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		@section('css')
-
+        <link href="/js/require.css" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap-theme.min.css" />
@@ -62,9 +62,13 @@
 		</div>
 
 		@section('javascript')
-
-			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-			<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+            <script src="/js/require.js"></script>
+			<!--script src="/js/jquery/jquery.min.js"></script-->
+			<script>
+			require(['jquery'], function($) {
+			    //$('body').css('background-color', 'black');
+			});
+			</script>
 		@show
 
 	</body>

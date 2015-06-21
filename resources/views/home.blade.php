@@ -13,8 +13,7 @@
 	@parent
 	<script>
 	"use strict" ;
-
-	$(function() {
+	require(['jquery'], function($) {
 		$.getJSON( '/api/stats', function( data ) {
 			$('#messagesCount').text( data.messagesCount );
 			$('#channelsCount').text( data.channelsCount );
