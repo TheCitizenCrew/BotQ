@@ -21,7 +21,7 @@ class MessagesCreateTable extends Migration
                 ->onDelete('cascade');
             $table->string('label', \App\Models\Message::LABEL_LENGTH);
             // priorité entre messages
-            $table->smallInteger('priority');
+            $table->smallInteger('priority')->default(0);;
             // quand priorité supérieure, que faire de l'action précédente ?
             // pause ou stop
             $table->enum('priority_action', ['pause', 'stop', 'simult'])->default('pause');

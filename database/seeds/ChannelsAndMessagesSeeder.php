@@ -33,5 +33,29 @@ class ChannelsAndMessagesSeeder extends Seeder
             'status_done' => null,
             'status_aborted' => null*/
         ]);
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg #2',
+            //'priority' => 0,
+            //'priority_action' => 'stop',
+            //'play_loop' => false,
+            'content_type' => 'application/url',
+            'content' => 'http://sanibot.org',
+            /*'status_got' => null,
+            'status_done' => null,
+            'status_aborted' => null*/
+        ]);
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg #3',
+            //'priority' => 0,
+            //'priority_action' => 'stop',
+            //'play_loop' => false,
+            'content_type' => 'application/url',
+            'content' => 'http://sanibot.org',
+            /*'status_got' => null,
+            'status_done' => null,
+            'status_aborted' => null*/
+        ]);
     }
 }

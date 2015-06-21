@@ -37,6 +37,10 @@ $app->group([
         'as' => 'ApiStats',
         'uses' => 'App\Http\Controllers\ApiController@stats'
     ]);
+    $app->get('messagesSet/{channelId:[0-9]+}', [
+        'as' => 'ApiStats',
+        'uses' => 'App\Http\Controllers\ApiController@getMessagesSet'
+    ]);
 });
 
 $app->group([

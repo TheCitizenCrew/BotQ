@@ -38,7 +38,10 @@ class Message extends Model implements ValidatingModelInterface
      * Avoid Illuminate\Database\Eloquent\MassAssignmentException.
      * @var array
      */
-    protected $fillable = ['channel_id', 'label', 'priority', 'priority_action', 'play_loop', 'play_at_time', 'content_type', 'content'];
+    protected $fillable = [
+        'channel_id',
+        'label',
+        'priority', 'priority_action', 'play_loop', 'play_at_time', 'content_type', 'content'];
     
     /**
      * Get Message's Channel
@@ -49,4 +52,27 @@ class Message extends Model implements ValidatingModelInterface
     {
         return $this->belongsTo('\App\Models\Channel');
     }
+
+    public function scopeForChannel($query, $channelId )
+    {
+        return $query->where('channel_id', '=', $channelId);
+    }
+    
+    public function scopeNotDone($query )
+    {
+        return $query->where('status_done', '=', null);
+    }
+    
+    
+    public static function getMessagesSet($channelId)
+    {
+        return Message::forChannel($channelId)
+            ->notDone()
+            ->orderBy('priority', 'desc')
+            ->orderBy('id','asc')
+            //->groupBy('priority')
+            ->limit(2)
+            ->get();
+    }
+
 }

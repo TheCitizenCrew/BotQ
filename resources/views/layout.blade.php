@@ -55,7 +55,7 @@
 		<div class="container-fuild" role="footer">
 			<blockquote>
 				<footer>
-					&copy; 2015 <a href="https://github.com/TheCitizenCrew">The Citizen Crew & Co</a><br/>
+					&copy; 2015 <a href="https://github.com/TheCitizenCrew">The Citizen Crew &amp; Co</a><br/>
 					Powered with Php &amp; Javascript (Lumen, Bootstrap, JQuery, CdnJs ...).
 				</footer>
 			</blockquote>

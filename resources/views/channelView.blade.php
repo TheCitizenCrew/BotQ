@@ -16,6 +16,7 @@
 <h2>Messages</h2>
 <table class="table table-striped table-bordered">
     <tr>
+        <th>Id</th>
         <th>Label</th>
         <td>priority</td>
         <td>priority action</td>
@@ -30,6 +31,7 @@
     </tr>
     @foreach ($channel->messages as $message)
     <tr>
+        <td>{{ $message->id }}</td>
         <td>{{ $message->label }}</td>
         <td>{{ $message->priority }}</td>
         <td>{{ $message->priority_action }}</td>
