@@ -37,14 +37,8 @@ $app->group([
         'as' => 'ApiStats',
         'uses' => 'App\Http\Controllers\ApiController@stats'
     ]);
-    $app->get('messagesSet/{channelId:[0-9]+}', [
-        'as' => 'ApiStats',
-        'uses' => 'App\Http\Controllers\ApiController@getMessagesSet'
-    ]);
-    $app->get('messageGot/{channelId:[0-9]+}/{messageId:[0-9]+}', [
-        'as' => 'ApiStats',
-        'uses' => 'App\Http\Controllers\ApiController@setMessageGot'
-    ]);
+    $app->get('messagesSet/{channelId:[0-9]+}', 'App\Http\Controllers\ApiController@getMessagesSet');
+    $app->get('messageStatus/{channelId:[0-9]+}/{messageId:[0-9]+}/{status}', 'App\Http\Controllers\ApiController@setMessageStatus');
 });
 
 $app->group([

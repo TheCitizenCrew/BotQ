@@ -19,39 +19,51 @@ var messageCurrent = null;
 var messageNext = null;
 
 self.addEventListener('message', function(e) {
-	
+
 	var data = e.data;
-	console.log('htmlCliWorker.js received cmd "'+data.cmd+'"');
+	console.log('htmlCliWorker.js received cmd "' + data.cmd + '"');
 	switch( data.cmd ){
 
 	case 'say':
 		self.postMessage(data.msg);
 		break;
 
-	case 'messageError':
 	case 'messageDone':
+		// Le client a fait son travail, qui est maintenant terminé
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/done',
+				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+		messageCurrent = null ;
+		if( messageNext!=null) {
+			messageCurrent = messageNext;
+			messageNext = null;
+			// consume message queue
+			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+			// give new work to client
+			self.postMessage(messageCurrent);
+		}
+		break;
 
-		messageCurrent = messageNext;
-		messageNext = null;
-		// Send now to htmlClient
-		tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot,
-				'GET', null, 'application/javascript');
-		self.postMessage(messageCurrent);
-
-		// data.message
-		/*
-		 * data.status tinyxhr('http://botq.localhost/api/messageDone/' +
-		 * botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot, 'GET',
-		 * null, 'application/javascript');
-		 */
+	case 'messageError':
+		// Le client n'a pas fait son travail à cause d'une erreur
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/aborted',
+				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+		messageCurrent = null ;
+		if( messageNext!=null) {
+			messageCurrent = messageNext;
+			messageNext = null;
+			// consume message queue
+			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+			// give new work to client
+			self.postMessage(messageCurrent);
+		}
 		break;
 
 	case 'messageAborted':
-		/*
-		 * tinyxhr('http://botq.localhost/api/messageAborted/' + botQChannel + '/' +
-		 * messageCurrent.id, onXhrResponseMessageGot, 'GET', null,
-		 * 'application/javascript');
-		 */
+		// Le client a abandonné son travail parcequ'il a reçu un autre message
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/aborted',
+				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		break;
 
 	case 'start':
@@ -78,8 +90,8 @@ function pulse() {
 
 function onXhrResponse(err, data, xhr) {
 
-	console.log('messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
-	console.log('messageNext ' + (messageNext ? messageNext.id : 'null'));
+	console.log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
+	console.log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
 
 	if( err) {
 		console.log("goterr ", err, 'status=' + xhr.status);
@@ -98,6 +110,7 @@ function onXhrResponse(err, data, xhr) {
 	try {
 
 		if( messageCurrent == null) {
+			// Le client n'a plus rien a manger...
 
 			messageCurrent = json[0];
 
@@ -105,8 +118,8 @@ function onXhrResponse(err, data, xhr) {
 				messageNext = json[1];
 
 			// Send now to htmlClient
-			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot,
-					'GET', null, 'application/javascript');
+			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			self.postMessage(messageCurrent);
 
 		} else if( json[0].id == messageCurrent.id) {
@@ -125,8 +138,8 @@ function onXhrResponse(err, data, xhr) {
 			messageCurrent = json[0];
 
 			// Send now to htmlClient
-			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot,
-					'GET', null, 'application/javascript');
+			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			self.postMessage(messageCurrent);
 
 		} else {
@@ -144,8 +157,8 @@ function onXhrResponse(err, data, xhr) {
 
 			if( e.messageId) {
 				// remove bad message from Q
-				tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + e.messageId, onXhrResponseMessageGot,
-						'GET', null, 'application/javascript');
+				tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + e.messageId + '/got',
+						onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			}
 
 		} else {
@@ -156,9 +169,19 @@ function onXhrResponse(err, data, xhr) {
 
 }
 
-function onXhrResponseMessageGot(err, data, xhr) {
+function onXhrResponseMessageStatus(err, data, xhr) {
 }
 
+/**
+ * Simple Ajax method
+ * 
+ * @param url
+ * @param cb
+ * @param method
+ * @param post
+ * @param contenttype
+ * @returns
+ */
 function tinyxhr(url, cb, method, post, contenttype) {
 	var requestTimeout, xhr;
 	try {

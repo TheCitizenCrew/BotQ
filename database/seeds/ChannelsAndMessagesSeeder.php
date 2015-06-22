@@ -42,13 +42,19 @@ class ChannelsAndMessagesSeeder extends Seeder
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #3',
+            'content_type' => 'dummy',
+            'content' => 'bla bla',
+        ]);
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg #4',
             'play_duration' => 5,
             'content_type' => 'application/url',
             'content' => 'http://sanilabo.org',
         ]);
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #4',
+            'label' => 'msg #5',
             'content_type' => 'video/mp4',
             'content' => 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download',
         ]);

@@ -28,9 +28,10 @@ class ApiController extends Controller
         return response()->json($messagesSet);
     }
 
-    public function setMessageGot($channelId, $messageId)
+    public function setMessageStatus($channelId, $messageId, $status)
     {
-        $m = Message::setMessageStatusGot($channelId, $messageId);
+        $m = Message::setMessageStatus($channelId, $messageId, $status);
         return response()->json($m);
     }
+
 }

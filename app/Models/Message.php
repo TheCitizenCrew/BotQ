@@ -41,7 +41,8 @@ class Message extends Model implements ValidatingModelInterface
             'boolean'
         ],
         'play_duration' => [
-            'integer', 'min:1'
+            'integer',
+            'min:1'
         ],
         'content_type' => [
             'required',
@@ -53,8 +54,7 @@ class Message extends Model implements ValidatingModelInterface
         'status_got' => [
             'date'
         ]
-    ]
-    ;
+    ];
 
     /**
      * Permit mass assignement with those fields.
@@ -106,14 +106,27 @@ class Message extends Model implements ValidatingModelInterface
             ->get();
     }
 
-    public static function setMessageStatusGot($channelId, $messageId)
+    public static function setMessageStatus($channelId, $messageId, $status)
     {
         $m = Message::find($messageId);
-        if ($m->channel_id != $channelId)
+        if ($m->channel_id != $channelId) {
             throw new Exception('Channel does not match ' . $channelId . ' ' . $messageId);
-            // $m->status_got = \Carbon\Carbon::now('Europe/Paris');
-            // $m->status_got = \Carbon\Carbon::now();
-        $m->status_got = new \Carbon\Carbon();
+        }
+        // $m->status_got = \Carbon\Carbon::now('Europe/Paris');
+        // $m->status_got = \Carbon\Carbon::now();
+        switch ($status) {
+            case 'got':
+                $m->status_got = new \Carbon\Carbon();
+                break;
+            case 'done':
+                $m->status_done = new \Carbon\Carbon();
+                break;
+            case 'aborted':
+                $m->status_aborted = new \Carbon\Carbon();
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid message status "' . $status . '"');
+        }
         $m->save();
         return $m;
     }
