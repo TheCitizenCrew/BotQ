@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Essai09</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="playground"></div>
+
+<p>go to <a href="essai09.1.html">essai09.1</a></p>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+require(['jquery'], function($) {
+
+	$('body').css('background-color', 'grey');
+	$('body').css('color', 'white');
+	$('body').css('font-weight', 'bold');
+
+	println( '<p>HTML storage supported : '+(supports_html5_storage()?'YES':'NO')+'</p>' );
+
+	var foo = localStorage.getItem('foo');
+	println( '<p>foo : '+(foo?foo:'null')+'</p>' );
+	localStorage.setItem('foo', 'Hello World !');
+	foo = localStorage.getItem('foo');
+	println( '<p>foo : '+(foo?foo:'null')+'</p>' );
+
+});
+
+function println(msg)
+{
+	$('#playground').html( $('#playground').html() + msg);
+}
+
+function supports_html5_storage() {
+  try {
+    return 'localStorage' in window && window['localStorage'] !== null;
+  } catch (e) {
+  }
+  return false;
+}
+
+</script>
+</body>
+</html>
