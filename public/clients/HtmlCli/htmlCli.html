@@ -47,6 +47,7 @@ html, body {
 				displayVideo(e.data);
 			} else {
 				console.log('ERROR: unknow message type !');
+				messagePlayDone(e.data, 'error');
 			}
 		}
 
@@ -62,26 +63,28 @@ html, body {
 			};
 			switch( videomessage.content_type ){
 			case 'video/mp4':
-				media.m4v = videomessage.url;
+				media.m4v = videomessage.content;
 				media_supplied = 'm4v';
 				break;
 			case 'video/ogg':
-				media.ogv = videomessage.url;
+				media.ogv = videomessage.content;
 				media_supplied = 'ogv';
 				break;
 			case 'video/webm':
-				media.webmv = videomessage.url;
+				media.webmv = videomessage.content;
 				media_supplied = 'webmv';
 				break;
 			case 'video/flv':
-				media.flv = videomessage.url;
+				media.flv = videomessage.content;
 				media_supplied = 'flv';
 				break;
 			default:
 				console.log('ERROR', 'unknow media type "' + videomessage.content_type + '"');
+				messagePlayDone(videomessage, 'error');
 				return;
 			}
-
+	console.log(media_supplied);
+	console.log(media);
 			$("#jquery_jplayer").jPlayer({
 				ready : function() {
 					console.log('jPlayer.ready');
@@ -110,18 +113,18 @@ html, body {
 		 */
 		function messagePlayDone(message, status) {
 
+			var cmd ;
 			if( status == 'done') {
-				worker.postMessage({
-					cmd : 'messageNext',
-					message : message
-				}); // Send data to our worker.
-
+				cmd = 'messageDone';
 			} else if( status == 'aborted') {
-				worker.postMessage({
-					cmd : 'messageAborted',
-					message : message
-				}); // Send data to our worker.
+				cmd = 'messageAborted';
+			} else if( status == 'error') {
+				cmd = 'messageError';
 			}
+			worker.postMessage({
+				'cmd' : cmd,
+				'message' : message
+			}); // Send data to our worker.
 
 		}
 	</script>

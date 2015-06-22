@@ -19,14 +19,17 @@ var messageCurrent = null;
 var messageNext = null;
 
 self.addEventListener('message', function(e) {
+	
 	var data = e.data;
+	console.log('htmlCliWorker.js received cmd "'+data.cmd+'"');
 	switch( data.cmd ){
 
 	case 'say':
 		self.postMessage(data.msg);
 		break;
 
-	case 'messageNext':
+	case 'messageError':
+	case 'messageDone':
 
 		messageCurrent = messageNext;
 		messageNext = null;
@@ -42,6 +45,7 @@ self.addEventListener('message', function(e) {
 		 * null, 'application/javascript');
 		 */
 		break;
+
 	case 'messageAborted':
 		/*
 		 * tinyxhr('http://botq.localhost/api/messageAborted/' + botQChannel + '/' +
