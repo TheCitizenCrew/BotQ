@@ -92,7 +92,7 @@ class Message extends Model implements ValidatingModelInterface
 
     public function scopeNotDone($query)
     {
-        return $query->where('status_got', '=', '');
+        return $query->where('status_got', '=', '')->orWhere('status_got', '=', null);
     }
 
     public static function getMessagesSet($channelId)
