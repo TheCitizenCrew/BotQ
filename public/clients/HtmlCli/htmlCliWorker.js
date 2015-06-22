@@ -12,7 +12,7 @@
 importScripts('htmlCliCommon.js');
 
 var botQChannel = 1;
-var botQPullFreq = 1000 * 10;
+var botQPullFreq = 1000 * 4;
 var botQPullTimer = null;
 
 var messageCurrent = null;
@@ -26,8 +26,26 @@ self.addEventListener('message', function(e) {
 		self.postMessage(data.msg);
 		break;
 
-	case 'nextMessage':
+	case 'messageNext':
+		
+		messageCurrent = messageNext ;
+		messageNext = null ;
+		// Send now to htmlClient
+		tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/'
+				+ messageCurrent.id, onXhrResponseMessageGot, 'GET', null,
+				'application/javascript');
+		self.postMessage(messageCurrent);
 
+		//data.message
+		/*data.status
+		tinyxhr('http://botq.localhost/api/messageDone/' + botQChannel + '/'
+				+ messageCurrent.id, onXhrResponseMessageGot, 'GET', null,
+				'application/javascript');*/
+		break;
+	case 'messageAborted':
+		/*tinyxhr('http://botq.localhost/api/messageAborted/' + botQChannel + '/'
+				+ messageCurrent.id, onXhrResponseMessageGot, 'GET', null,
+				'application/javascript');*/
 		break;
 
 	case 'start':
@@ -77,6 +95,12 @@ function onXhrResponse(err, data, xhr) {
 		if (messageCurrent == null) {
 
 			messageCurrent = createMessageFromBotQMessage(json[0]);
+if( messageCurrent instanceof VideoMessage ){
+	console.log('messageCurrent is a VideoMessage' )
+}else{
+	console.log('messageCurrent is NOT a VideoMessage' )
+}
+
 			if (json.length == 2)
 				messageNext = createMessageFromBotQMessage(json[1]);
 

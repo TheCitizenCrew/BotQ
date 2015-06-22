@@ -17,27 +17,136 @@ html, body {
 </style>
 </head>
 <body>
-<div id="playground"></div>
-<script src="/js/require.js"></script>
-<script src="htmlCliCommon.js"></script>
-<script>
-"use strict" ;
+	<div id="playground"></div>
+	<script src="/js/require.js"></script>
+	<script src="htmlCliCommon.js"></script>
+	<script>
+		"use strict";
 
-var worker = null ;
+		var worker = null;
 
-require(['jquery'], function($) {
+		require([ 'jquery', 'jplayer' ], function($) {
 
-	worker = new Worker('htmlCliWorker.js');
-	worker.addEventListener('message', workerOnMessage, false);
-	worker.postMessage({cmd: 'start'}); // Send data to our worker.
+			worker = new Worker('htmlCliWorker.js');
+			worker.addEventListener('message', workerOnMessage, false);
+			worker.postMessage({
+				cmd : 'start'
+			}); // Send data to our worker.
 
-});
+		});
 
-function workerOnMessage(e)
-{
-	console.log('htmlCli received a message:')
-	console.log(e.data);
-}
-</script>
+		/**
+		 * 
+		 * instanceof ne fonctionne plus, après être passé dans la machine à message du WebWorker tous les objets sont de l'instance Object !
+		 */
+		function workerOnMessage(e) {
+
+			console.log('htmlCli received a message:')
+			console.log(e);
+			switch (e.data.mime) {
+			case 'video/mp4':
+			case 'video/ogg':
+			case 'video/webm':
+			case 'video/flv':
+				displayVideo(e.data);
+				break;
+			default:
+				console.log('ERROR: unknow message type !');
+			}
+		}
+
+		function displayVideo(videomessage) {
+
+			$('#playground')
+					.html(
+							'<div id="jp_container" class="jp-video " role="application" aria-label="media player"><div class="jp-type-single"><div id="jquery_jplayer" class="jp-jplayer"></div></div></div>');
+
+			var media_supplied;
+			var media = {
+				title : 'Some video'
+			};
+			switch (videomessage.mime) {
+			case 'video/mp4':
+				media.m4v = videomessage.url;
+				media_supplied = 'm4v';
+				break;
+			case 'video/ogg':
+				media.ogv = videomessage.url;
+				media_supplied = 'ogv';
+				break;
+			case 'video/webm':
+				media.webmv = videomessage.url;
+				media_supplied = 'webmv';
+				break;
+			case 'video/flv':
+				media.flv = videomessage.url;
+				media_supplied = 'flv';
+				break;
+			default:
+				console.log('ERROR', 'unknow media type "' + videomessage.mime
+						+ '"');
+				return;
+			}
+
+			$("#jquery_jplayer").jPlayer({
+				ready : function() {
+					console.log('jPlayer.ready');
+					/*$(this).jPlayer(
+									'setMedia',
+									{
+										title : 'Some video',
+										//m4v : url,
+										//poster : 'http://vignette3.wikia.nocookie.net/teamumizoomi/images/1/17/Bot.png/revision/latest?cb=20110529202036'
+									});*/
+					$(this).jPlayer('setMedia', media);
+					$(this).jPlayer('play');
+
+				},
+				ended : function() {
+					console.log('jPlayer.ended');
+					//$(this).jPlayer("play"); // play again !
+					messagePlayDone(videomessage, 'done');
+				},
+				progress : function(data) {
+					console.log('jPlayer.progress');
+					console.log(data);
+				},
+				loadedmetadata : function() {
+					console.log('jPlayer.loadedmetadata');
+				},
+				loadeddata : function() {
+					console.log('jPlayer.loadeddata');
+				},
+				waiting : function() {
+					console.log('jPlayer.waiting');
+				},
+				cssSelectorAncestor : "#jp_container",
+				preload : 'auto',
+				supplied : media_supplied,
+				solution : 'html, flash',
+				size : {
+					width : "" + window.innerWidth + "px",
+					height : "" + window.innerHeight + "px"
+				},
+
+			});
+		}
+	function messagePlayDone(message, status)
+	{
+		if( status == 'done'){
+			worker.postMessage({
+				cmd: 'messageNext',
+				message: message 
+			}); // Send data to our worker.
+			
+		} if( status == 'aborted'){
+			worker.postMessage({
+				cmd: 'messageAborted',
+				message: message 
+			}); // Send data to our worker.
+		}
+		
+	}
+	</script>
 </body>
 </html>
