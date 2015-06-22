@@ -95,10 +95,10 @@ function onXhrResponse(err, data, xhr) {
 
 		if( messageCurrent == null) {
 
-			messageCurrent = Message.createMessageFromBotQMessage(json[0]);
+			messageCurrent = json[0];
 
 			if( json.length == 2)
-				messageNext = Message.createMessageFromBotQMessage(json[1]);
+				messageNext = json[1];
 
 			// Send now to htmlClient
 			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot,
@@ -109,16 +109,16 @@ function onXhrResponse(err, data, xhr) {
 
 			if( json.length == 2) {
 				if( messageNext == null) {
-					messageNext = Message.createMessageFromBotQMessage(json[1]);
+					messageNext = json[1];
 				} else if( json[1].id != messageNext.id) {
-					messageNext = Message.createMessageFromBotQMessage(json[1]);
+					messageNext = json[1];
 				}
 			}
 
 		} else if( json[0].priority > messageCurrent.priority) {
 
 			// new message with higher priority
-			messageCurrent = Message.createMessageFromBotQMessage(json[0]);
+			messageCurrent = json[0];
 
 			// Send now to htmlClient
 			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/' + messageCurrent.id, onXhrResponseMessageGot,
@@ -128,9 +128,9 @@ function onXhrResponse(err, data, xhr) {
 		} else {
 
 			if( messageNext == null) {
-				messageNext = Message.createMessageFromBotQMessage(json[0]);
+				messageNext = json[0];
 			} else if( json[0].id != messageNext.id) {
-				messageNext = Message.createMessageFromBotQMessage(json[0]);
+				messageNext = json[0];
 			}
 		}
 

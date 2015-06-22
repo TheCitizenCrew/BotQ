@@ -43,7 +43,7 @@ html, body {
 
 			console.log('htmlCli received a message:')
 			console.log(e);
-			if( e.data.mime.indexOf('video/') == 0) {
+			if( e.data.content_type.indexOf('video/') == 0) {
 				displayVideo(e.data);
 			} else {
 				console.log('ERROR: unknow message type !');
@@ -60,7 +60,7 @@ html, body {
 			var media = {
 				title : 'Some video'
 			};
-			switch( videomessage.mime ){
+			switch( videomessage.content_type ){
 			case 'video/mp4':
 				media.m4v = videomessage.url;
 				media_supplied = 'm4v';
@@ -78,42 +78,21 @@ html, body {
 				media_supplied = 'flv';
 				break;
 			default:
-				console.log('ERROR', 'unknow media type "' + videomessage.mime + '"');
+				console.log('ERROR', 'unknow media type "' + videomessage.content_type + '"');
 				return;
 			}
 
 			$("#jquery_jplayer").jPlayer({
 				ready : function() {
 					console.log('jPlayer.ready');
-					/*$(this).jPlayer(
-									'setMedia',
-									{
-										title : 'Some video',
-										//m4v : url,
-										//poster : 'http://vignette3.wikia.nocookie.net/teamumizoomi/images/1/17/Bot.png/revision/latest?cb=20110529202036'
-									});*/
 					$(this).jPlayer('setMedia', media);
 					$(this).jPlayer('play');
-
 				},
 				ended : function() {
 					console.log('jPlayer.ended');
 					//$(this).jPlayer("play"); // play again !
 					messagePlayDone(videomessage, 'done');
 				},
-				/*progress : function(data) {
-					console.log('jPlayer.progress');
-					console.log(data);
-				},
-				loadedmetadata : function() {
-					console.log('jPlayer.loadedmetadata');
-				},
-				loadeddata : function() {
-					console.log('jPlayer.loadeddata');
-				},
-				waiting : function() {
-					console.log('jPlayer.waiting');
-				},*/
 				cssSelectorAncestor : "#jp_container",
 				preload : 'auto',
 				supplied : media_supplied,

@@ -35,6 +35,7 @@ UnknowMessageTypeException.prototype = Object.create(Exception.prototype);
  * Message
  */
 
+/*
 var Message = function(id, priority, loop, mime) {
 	this.id = id;
 	this.loop = loop;
@@ -55,3 +56,4 @@ var VideoMessage = function(id, priority, loop, url, mime) {
 	this.url = url;
 }
 VideoMessage.prototype = Object.create(Message.prototype);
+*/
