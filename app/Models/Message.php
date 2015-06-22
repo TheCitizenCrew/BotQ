@@ -34,14 +34,27 @@ class Message extends Model implements ValidatingModelInterface
             'min:1',
             'max:45'
         ],
+        'priority' => [
+            'integer'
+        ],
+        'play_loop' => [
+            'boolean'
+        ],
+        'play_duration' => [
+            'integer', 'min:1'
+        ],
         'content_type' => [
             'required',
             'min:4'
         ],
         'content' => [
             'required'
+        ],
+        'status_got' => [
+            'date'
         ]
-    ];
+    ]
+    ;
 
     /**
      * Permit mass assignement with those fields.
@@ -56,6 +69,7 @@ class Message extends Model implements ValidatingModelInterface
         'priority_action',
         'play_loop',
         'play_at_time',
+        'play_duration',
         'content_type',
         'content',
         'status_got'

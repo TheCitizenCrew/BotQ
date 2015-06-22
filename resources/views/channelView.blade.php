@@ -19,6 +19,7 @@
 		<td>priority action</td>
 		<td>play loop</td>
 		<td>play at time</td>
+		<td>play duration</td>
 		<td>content_type</td>
 		<td>content</td>
 		<td>status got</td>
@@ -34,6 +35,7 @@
 		<td>{{ $message->priority_action }}</td>
 		<td>@if( $message->play_loop == '1') On @else Off @endif</td>
 		<td>{{ $message->play_at_time }}</td>
+		<td>{{ $message->play_duration }}</td>
 		<td>{{ $message->content_type }}</td>
 		<td>{{ $message->content }}</td>
 		<td>{{ $message->status_got }}</td>

@@ -89,6 +89,19 @@
 		</div>
 
 		<div
+			class="form-group @if($errors->first('play_duration'))has-error @endif">
+			<label for="play_duration" class="col-sm-1 control-label">play_duration</label>
+			<div class="col-sm-2">
+				@if ($errors->first('play_duration'))
+				<p class="text-danger">error {{$errors->first('play_duration')}}</p>
+				@endif
+				<input type="number" class="form-control" name="play_duration"
+					id="play_duration" placeholder="Durée d'affichage"
+					min="1" value="{{$message->play_duration}}" />
+			</div>
+		</div>
+
+		<div
 			class="form-group @if($errors->first('content_type'))has-error @endif">
 			<label for="content_type" class="col-sm-1 control-label">content_type</label>
 			<div class="col-sm-2">

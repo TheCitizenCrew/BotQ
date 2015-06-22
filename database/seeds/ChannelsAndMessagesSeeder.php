@@ -25,35 +25,32 @@ class ChannelsAndMessagesSeeder extends Seeder
             'priority' => 100,
             'priority_action' => 'stop',
             'play_loop' => false,
+            //'play_at_time' => '',
+            //'play_duration' => 0,
             'content_type' => 'application/url',
             'content' => 'http://sanibot.org',
-            /*'status_got' => null,
-            'status_done' => null,
-            'status_aborted' => null*/
+            //'status_got' => null,
+            //'status_done' => null,
+            //'status_aborted' => null
         ]);
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #2',
-            // 'priority' => 0,
-            // 'priority_action' => 'stop',
-            // 'play_loop' => false,
-            'content_type' => 'application/url',
-            'content' => 'http://sanibot.org',
-            /*'status_got' => null,
-            'status_done' => null,
-            'status_aborted' => null*/
+            'content_type' => 'video/mp4',
+            'content' => 'http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v',
         ]);
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #3',
-            // 'priority' => 0,
-            // 'priority_action' => 'stop',
-            // 'play_loop' => false,
+            'play_duration' => 5,
             'content_type' => 'application/url',
-            'content' => 'http://sanibot.org',
-            /*'status_got' => null,
-            'status_done' => null,
-            'status_aborted' => null*/
+            'content' => 'http://sanilabo.org',
+        ]);
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg #4',
+            'content_type' => 'video/mp4',
+            'content' => 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download',
         ]);
     }
 }

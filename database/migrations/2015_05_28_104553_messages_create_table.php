@@ -33,6 +33,7 @@ class MessagesCreateTable extends Migration
             // si aucune action à suivre, stop ou en boucle ?
             $table->boolean('play_loop')->default(false);
             $table->time('play_at_time')->nullable();
+            $table->integer('play_duration')->unsigned()->nullable();
             $table->string('content_type');
             $table->text('content');
             $table->timestamp('status_got')->nullable();
