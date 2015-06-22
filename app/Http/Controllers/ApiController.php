@@ -22,13 +22,13 @@ class ApiController extends Controller
         return response()->json($stats);
     }
 
-    public function getMessagesSet( $channelId )
+    public function getMessagesSet($channelId)
     {
         $messagesSet = Message::getMessagesSet($channelId);
         return response()->json($messagesSet);
     }
 
-    public function setMessageGot( $channelId, $messageId )
+    public function setMessageGot($channelId, $messageId)
     {
         $m = Message::setMessageStatusGot($channelId, $messageId);
         return response()->json($m);

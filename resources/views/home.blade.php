@@ -1,17 +1,14 @@
-
-@extends('layout')
-
-@section('title', 'Welcome on BotQ')
+ @extends('layout') @section('title', 'Welcome on BotQ')
 
 @section('content')
 
-<p class="bg-primary">La base de données contient <span id="messagesCount">...</span> messages pour <span id="channelsCount">...</span> channels.</p>
+<p class="bg-primary">
+	La base de données contient <span id="messagesCount">...</span>
+	messages pour <span id="channelsCount">...</span> channels.
+</p>
 
-@stop
-
-@section('javascript')
-	@parent
-	<script>
+@stop @section('javascript') @parent
+<script>
 	"use strict" ;
 	require(['jquery'], function($) {
 		$.getJSON( '/api/stats', function( data ) {

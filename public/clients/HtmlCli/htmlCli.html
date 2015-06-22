@@ -43,14 +43,9 @@ html, body {
 
 			console.log('htmlCli received a message:')
 			console.log(e);
-			switch (e.data.mime) {
-			case 'video/mp4':
-			case 'video/ogg':
-			case 'video/webm':
-			case 'video/flv':
+			if( e.data.mime.indexOf('video/') == 0) {
 				displayVideo(e.data);
-				break;
-			default:
+			} else {
 				console.log('ERROR: unknow message type !');
 			}
 		}
@@ -65,7 +60,7 @@ html, body {
 			var media = {
 				title : 'Some video'
 			};
-			switch (videomessage.mime) {
+			switch( videomessage.mime ){
 			case 'video/mp4':
 				media.m4v = videomessage.url;
 				media_supplied = 'm4v';
@@ -83,8 +78,7 @@ html, body {
 				media_supplied = 'flv';
 				break;
 			default:
-				console.log('ERROR', 'unknow media type "' + videomessage.mime
-						+ '"');
+				console.log('ERROR', 'unknow media type "' + videomessage.mime + '"');
 				return;
 			}
 
@@ -107,7 +101,7 @@ html, body {
 					//$(this).jPlayer("play"); // play again !
 					messagePlayDone(videomessage, 'done');
 				},
-				progress : function(data) {
+				/*progress : function(data) {
 					console.log('jPlayer.progress');
 					console.log(data);
 				},
@@ -119,7 +113,7 @@ html, body {
 				},
 				waiting : function() {
 					console.log('jPlayer.waiting');
-				},
+				},*/
 				cssSelectorAncestor : "#jp_container",
 				preload : 'auto',
 				supplied : media_supplied,
@@ -131,22 +125,26 @@ html, body {
 
 			});
 		}
-	function messagePlayDone(message, status)
-	{
-		if( status == 'done'){
-			worker.postMessage({
-				cmd: 'messageNext',
-				message: message 
-			}); // Send data to our worker.
-			
-		} if( status == 'aborted'){
-			worker.postMessage({
-				cmd: 'messageAborted',
-				message: message 
-			}); // Send data to our worker.
+
+		/**
+		 * to call when a message play is finished (done).
+		 */
+		function messagePlayDone(message, status) {
+
+			if( status == 'done') {
+				worker.postMessage({
+					cmd : 'messageNext',
+					message : message
+				}); // Send data to our worker.
+
+			} else if( status == 'aborted') {
+				worker.postMessage({
+					cmd : 'messageAborted',
+					message : message
+				}); // Send data to our worker.
+			}
+
 		}
-		
-	}
 	</script>
 </body>
 </html>

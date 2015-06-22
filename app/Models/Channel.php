@@ -5,18 +5,19 @@ use \Illuminate\Database\Eloquent\Model;
 use \Esensi\Model\Contracts\ValidatingModelInterface;
 use \Esensi\Model\Traits\ValidatingModelTrait;
 use \Esensi\Model\Traits\SoftDeletingModelTrait;
-use Illuminate\Support\Facades\Validator ;
+use Illuminate\Support\Facades\Validator;
 
-class Channel extends Model implements ValidatingModelInterface 
+class Channel extends Model implements ValidatingModelInterface
 {
-    const LABEL_LENGTH = 45 ;
-    //const toto = 'max:' . self::LABEL_LENGTH ;
 
+    const LABEL_LENGTH = 45;
+    // const toto = 'max:' . self::LABEL_LENGTH ;
+    
     use DatePresenter ;
-
+    
     // https://github.com/esensi/model#validating-model-trait
     use ValidatingModelTrait ;
-
+    
     // https://github.com/esensi/model#soft-deleting-model-trait
     use SoftDeletingModelTrait ;
 
@@ -30,27 +31,35 @@ class Channel extends Model implements ValidatingModelInterface
      * @var array
      */
     protected $rules = [
-        'label' => [ 'required','min:1','max:45' ]
-        //'slug' => [ 'max:16', 'alpha_dash', 'unique' ],
-        //'published' => [ 'boolean' ],
-        // ... more attribute rules
+        'label' => [
+            'required',
+            'min:1',
+            'max:45'
+        ]
     ];
+    // 'slug' => [ 'max:16', 'alpha_dash', 'unique' ],
+    // 'published' => [ 'boolean' ],
+    // ... more attribute rules
+    
 
     /**
      * Permit mass assignement with those fields.
      * Avoid Illuminate\Database\Eloquent\MassAssignmentException.
+     *
      * @var array
      */
-    protected $fillable = ['label', 'description'];
+    protected $fillable = [
+        'label',
+        'description'
+    ];
 
     /**
      * Get Channel's Messages
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function messages()
     {
         return $this->hasMany('\App\Models\Message');
     }
-
 }

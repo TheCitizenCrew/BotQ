@@ -7,20 +7,18 @@ class ChannelsAndMessagesSeeder extends Seeder
 
     public function run()
     {
-        //DB::table('channels')->delete();
+        // DB::table('channels')->delete();
         // cascading delete
         // DB::table('messages')->delete();
-        
         $channel = \App\Models\Channel::create([
             'label' => 'Channel #1',
             'description' => 'Une seed channel'
         ]);
         
-        if( ! $channel->id )
-        {
-            error_log(var_export($channel->getErrors(),true));            
+        if (! $channel->id) {
+            error_log(var_export($channel->getErrors(), true));
         }
-
+        
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #1',
@@ -36,9 +34,9 @@ class ChannelsAndMessagesSeeder extends Seeder
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #2',
-            //'priority' => 0,
-            //'priority_action' => 'stop',
-            //'play_loop' => false,
+            // 'priority' => 0,
+            // 'priority_action' => 'stop',
+            // 'play_loop' => false,
             'content_type' => 'application/url',
             'content' => 'http://sanibot.org',
             /*'status_got' => null,
@@ -48,9 +46,9 @@ class ChannelsAndMessagesSeeder extends Seeder
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg #3',
-            //'priority' => 0,
-            //'priority_action' => 'stop',
-            //'play_loop' => false,
+            // 'priority' => 0,
+            // 'priority_action' => 'stop',
+            // 'play_loop' => false,
             'content_type' => 'application/url',
             'content' => 'http://sanibot.org',
             /*'status_got' => null,

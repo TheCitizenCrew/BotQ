@@ -6,7 +6,6 @@ use App\Models\Channel;
 class ChannelsCreateTable extends Migration
 {
 
-
     /**
      * Run the migrations.
      *

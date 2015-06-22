@@ -10,7 +10,7 @@
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw
  * 
  */
-"use strict" ;
+"use strict";
 
 /**
  * Exception
@@ -20,13 +20,13 @@ var Exception = function(message) {
 	this.message = message;
 }
 
-Exception.prototype.toString = function(){
-	return this.message ;
+Exception.prototype.toString = function() {
+	return this.message;
 }
 
-var UnknowMessageTypeException = function( msgType, messageId )
-{
-	Exception.call(this, 'unknow message type "'+msgType+'" (messageId:'+(messageId?messageId:'unknow')+')');
+var UnknowMessageTypeException = function(msgType, messageId) {
+	Exception
+			.call(this, 'unknow message type "' + msgType + '" (messageId:' + (messageId ? messageId : 'unknow') + ')');
 	this.messageId = messageId;
 }
 UnknowMessageTypeException.prototype = Object.create(Exception.prototype);
@@ -36,27 +36,22 @@ UnknowMessageTypeException.prototype = Object.create(Exception.prototype);
  */
 
 var Message = function(id, priority, loop, mime) {
-	this.id = id ;
-	this.loop = loop ;
-	this.priority = priority ;
-	this.mime = mime ;
+	this.id = id;
+	this.loop = loop;
+	this.priority = priority;
+	this.mime = mime;
 }
 Message.createMessageFromBotQMessage = function(json) {
 
-	switch (json.content_type) {
-	case 'video/mp4':
-	case 'video/ogg':
-	case 'video/webm':
+	if( json.content_type.indexOf('video/') == 0) {
 		return new VideoMessage(json.id, json.priority, json.play_loop, json.content, json.content_type);
-		break;
-	default:
+	} else {
 		throw new UnknowMessageTypeException(json.content_type, json.id);
-
 	}
 }
 
 var VideoMessage = function(id, priority, loop, url, mime) {
 	Message.call(this, id, priority, loop, mime);
-	this.url = url ;
+	this.url = url;
 }
 VideoMessage.prototype = Object.create(Message.prototype);
