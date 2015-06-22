@@ -41,6 +41,19 @@ var Message = function(id, priority, loop, mime) {
 	this.priority = priority ;
 	this.mime = mime ;
 }
+Message.createMessageFromBotQMessage = function(json) {
+
+	switch (json.content_type) {
+	case 'video/mp4':
+	case 'video/ogg':
+	case 'video/webm':
+		return new VideoMessage(json.id, json.priority, json.play_loop, json.content, json.content_type);
+		break;
+	default:
+		throw new UnknowMessageTypeException(json.content_type, json.id);
+
+	}
+}
 
 var VideoMessage = function(id, priority, loop, url, mime) {
 	Message.call(this, id, priority, loop, mime);

@@ -94,15 +94,10 @@ function onXhrResponse(err, data, xhr) {
 
 		if (messageCurrent == null) {
 
-			messageCurrent = createMessageFromBotQMessage(json[0]);
-if( messageCurrent instanceof VideoMessage ){
-	console.log('messageCurrent is a VideoMessage' )
-}else{
-	console.log('messageCurrent is NOT a VideoMessage' )
-}
+			messageCurrent = Message.createMessageFromBotQMessage(json[0]);
 
 			if (json.length == 2)
-				messageNext = createMessageFromBotQMessage(json[1]);
+				messageNext = Message.createMessageFromBotQMessage(json[1]);
 
 			// Send now to htmlClient
 			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/'
@@ -114,16 +109,16 @@ if( messageCurrent instanceof VideoMessage ){
 
 			if (json.length == 2) {
 				if (messageNext == null) {
-					messageNext = createMessageFromBotQMessage(json[1]);
+					messageNext = Message.createMessageFromBotQMessage(json[1]);
 				} else if (json[1].id != messageNext.id) {
-					messageNext = createMessageFromBotQMessage(json[1]);
+					messageNext = Message.createMessageFromBotQMessage(json[1]);
 				}
 			}
 
 		} else if (json[0].priority > messageCurrent.priority) {
 
 			// new message with higher priority
-			messageCurrent = createMessageFromBotQMessage(json[0]);
+			messageCurrent = Message.createMessageFromBotQMessage(json[0]);
 
 			// Send now to htmlClient
 			tinyxhr('http://botq.localhost/api/messageGot/' + botQChannel + '/'
@@ -134,9 +129,9 @@ if( messageCurrent instanceof VideoMessage ){
 		} else {
 
 			if (messageNext == null) {
-				messageNext = createMessageFromBotQMessage(json[0]);
+				messageNext = Message.createMessageFromBotQMessage(json[0]);
 			} else if (json[0].id != messageNext.id) {
-				messageNext = createMessageFromBotQMessage(json[0]);
+				messageNext = Message.createMessageFromBotQMessage(json[0]);
 			}
 		}
 
@@ -175,21 +170,6 @@ if( messageCurrent instanceof VideoMessage ){
 }
 
 function onXhrResponseMessageGot(err, data, xhr) {
-}
-
-function createMessageFromBotQMessage(json) {
-
-	switch (json.content_type) {
-	case 'video/mp4':
-	case 'video/ogg':
-	case 'video/webm':
-		return new VideoMessage(json.id, json.priority, json.play_loop,
-				json.content, json.content_type);
-		break;
-	default:
-		throw new UnknowMessageTypeException(json.content_type, json.id);
-
-	}
 }
 
 function tinyxhr(url, cb, method, post, contenttype) {
