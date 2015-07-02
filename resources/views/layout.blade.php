@@ -13,12 +13,9 @@
 
 @section('css')
 <link href="/js/require.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet"
-	href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" />
-<link rel="stylesheet"
-	href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" />
-<link rel="stylesheet"
-	href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap-theme.min.css" />
+<!-- link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" /-->
+<link rel="stylesheet" href="/css//bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
 <link rel="stylesheet" href="/style.css" />
 
 @show
