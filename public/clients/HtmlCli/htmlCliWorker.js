@@ -12,7 +12,7 @@
 importScripts('htmlCliCommon.js');
 
 var botQChannel = 1;
-var botQPullFreq = 1000 * 4;
+var botQPullFreq = 1000 * 5;
 var botQPullTimer = null;
 
 var messageCurrent = null;
@@ -23,7 +23,7 @@ var messageNext = null;
  */
 self.addEventListener('message', function(e) {
 
-	$msgStatusString = null ;
+	var msgStatusString = null ;
 
 	var data = e.data;
 	console.log('htmlCliWorker.js received cmd "' + data.cmd + '"');
@@ -35,24 +35,24 @@ self.addEventListener('message', function(e) {
 
 	case 'messageDone':
 		
-		$msgStatusString = 'done';
+		msgStatusString = 'done';
 		
 	case 'messageError':
 		
-		if( $msgStatusString == null )
-			$msgStatusString = 'aborted';
+		if( msgStatusString == null )
+			msgStatusString = 'aborted';
 
 		//
 		// messageDone & messageError trigger same actions, only messsage status change
 		//
 
 		// check ...
-		if( messageCurrent.id != data.msg.id ){
+		if( messageCurrent.id != data.id ){
 			// Argh!! TODO : manage error
 		}
 
 		// Le client a fait son travail, qui est maintenant terminé (done)
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/done',
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/' + msgStatusString,
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		messageCurrent = null ;
 		
@@ -74,7 +74,7 @@ self.addEventListener('message', function(e) {
 		// messageAborted is not an Error, it's just a ack to update message status on server side
 
 		// check ...
-		if( messageCurrent.id != data.msg.id ){
+		if( messageCurrent.id != data.id ){
 			// Argh!! TODO : manage error
 		}
 
@@ -151,8 +151,9 @@ function onXhrResponse(err, data, xhr) {
 
 		} else if(
 				json[0].priority > messageCurrent.priority
-				|| json[0].play_at_time!=""
+				|| json[0].play_at_time!=null
 				) {
+console.log('ARGH! '+json[0].play_at_time);
 
 			// new message with higher priority
 			// or that it's time to play

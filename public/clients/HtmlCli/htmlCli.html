@@ -14,25 +14,40 @@ html, body {
 	font-weight: normal;
 	background-color: black;
 }
+#playground {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	overflow : hidden;
+}
+
 </style>
 </head>
 <body>
 	<div id="playground"></div>
+
 	<script src="/js/require.js"></script>
 	<script src="htmlCliCommon.js"></script>
 	<script>
 		"use strict";
 
 		var worker = null;
+		var messagePlaying = false ;
+		var staticMediaTimer = null ;
 
 		require([ 'jquery', 'jplayer' ], function($) {
 
-			worker = new Worker('htmlCliWorker.js');
+			// debug/essai
+			// displayHtmlUrl({play_duration:15000, content: 'http://botq.localhost/pages/chrono.html#msg1'});
+			
+			worker = new Worker('htmlCliWorker.js?'+(new Date()/1000));
 			worker.addEventListener('message', workerOnMessage, false);
 			worker.postMessage({
 				cmd : 'start'
 			}); // Send data to our worker.
-
+			
 		});
 
 		/**
@@ -42,21 +57,64 @@ html, body {
 		 */
 		function workerOnMessage(e) {
 
-			console.log('htmlCli received a message:')
+			console.log('htmlCli received a message: '+e.data.id);
 			console.log(e);
+			
+			if( staticMediaTimer ){
+				clearTimeout(staticMediaTimer);
+				staticMediaTimer = null ;
+			}
+
+			if( messagePlaying == true )
+				messagePlayDone(e.data, 'aborted');
+			messagePlaying = true ;
+
 			if( e.data.content_type.indexOf('video/') == 0) {
 				displayVideo(e.data);
+			} else if( e.data.content_type == 'application/url' ) {
+				displayHtmlUrl(e.data);
 			} else {
 				console.log('ERROR: unknow message type !');
 				messagePlayDone(e.data, 'error');
 			}
 		}
 
+		function displayHtmlUrl(message) {
+
+			console.log('displayHtmlUrl start for '+ message.play_duration);
+
+			$('#playground').html(
+				'<style>'
+				+'#theIframe {'
+				+'position : absolute;'
+				+'top      : 0;'
+				+'left     : 0;'
+				+'height   : 200px;'
+				+'}'
+				+'</style>'
+				+'<iframe id="theIframe"'
+				+' src="' + message.content + '"'
+				+' width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" />');
+
+			staticMediaTimer = setTimeout( displayHtmlUrlOnTimer, message.play_duration, message);
+		}
+
+		function displayHtmlUrlOnTimer( message )
+		{
+			console.log('displayHtmlUrl ended');
+			//$(this).jPlayer("play"); // play again !
+			staticMediaTimer = null ;
+			messagePlayDone(message, 'done');			
+		}
+
 		function displayVideo(videomessage) {
 
 			$('#playground')
-					.html(
-							'<div id="jp_container" class="jp-video " role="application" aria-label="media player"><div class="jp-type-single"><div id="jquery_jplayer" class="jp-jplayer"></div></div></div>');
+				.html(
+					'<div id="jp_container" class="jp-video " role="application" aria-label="media player">'
+					+'<div class="jp-type-single">'
+					+'<div id="jquery_jplayer" class="jp-jplayer">'
+					+'</div></div></div>');
 
 			var media_supplied;
 			var media = {
@@ -113,6 +171,8 @@ html, body {
 		 * to call when a message play is finished (done).
 		 */
 		function messagePlayDone(message, status) {
+
+			messagePlaying = false ;
 
 			var cmd ;
 			if( status == 'done') {
