@@ -23,6 +23,8 @@ var messageNext = null;
  */
 self.addEventListener('message', function(e) {
 
+	$msgStatusString = null ;
+
 	var data = e.data;
 	console.log('htmlCliWorker.js received cmd "' + data.cmd + '"');
 	switch( data.cmd ){
@@ -32,11 +34,30 @@ self.addEventListener('message', function(e) {
 		break;
 
 	case 'messageDone':
-		// Le client a fait son travail, qui est maintenant terminé
+		
+		$msgStatusString = 'done';
+		
+	case 'messageError':
+		
+		if( $msgStatusString == null )
+			$msgStatusString = 'aborted';
+
+		//
+		// messageDone & messageError trigger same actions, only messsage status change
+		//
+
+		// check ...
+		if( messageCurrent.id != data.msg.id ){
+			// Argh!! TODO : manage error
+		}
+
+		// Le client a fait son travail, qui est maintenant terminé (done)
 		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/done',
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		messageCurrent = null ;
-		if( messageNext!=null) {
+		
+		if( messageNext != null) {
+			// A message was ready, consume it
 			messageCurrent = messageNext;
 			messageNext = null;
 			// consume message queue
@@ -45,25 +66,18 @@ self.addEventListener('message', function(e) {
 			// give new work to client
 			self.postMessage(messageCurrent);
 		}
-		break;
 
-	case 'messageError':
-		// Le client n'a pas fait son travail à cause d'une erreur
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/aborted',
-				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
-		messageCurrent = null ;
-		if( messageNext!=null) {
-			messageCurrent = messageNext;
-			messageNext = null;
-			// consume message queue
-			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
-					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
-			// give new work to client
-			self.postMessage(messageCurrent);
-		}
 		break;
 
 	case 'messageAborted':
+		
+		// messageAborted is not an Error, it's just a ack to update message status on server side
+
+		// check ...
+		if( messageCurrent.id != data.msg.id ){
+			// Argh!! TODO : manage error
+		}
+
 		// Le client a abandonné son travail parcequ'il a reçu un autre message
 		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/aborted',
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
