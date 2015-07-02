@@ -107,8 +107,8 @@ function pulse() {
 
 function onXhrResponse(err, data, xhr) {
 
-	console.log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
-	console.log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
+	//console.log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
+	//console.log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
 
 	if( err) {
 		console.log("goterr ", err, 'status=' + xhr.status);
@@ -153,7 +153,6 @@ function onXhrResponse(err, data, xhr) {
 				json[0].priority > messageCurrent.priority
 				|| json[0].play_at_time!=null
 				) {
-console.log('ARGH! '+json[0].play_at_time);
 
 			// new message with higher priority
 			// or that it's time to play

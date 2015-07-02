@@ -40,7 +40,8 @@ html, body {
 		require([ 'jquery', 'jplayer' ], function($) {
 
 			// debug/essai
-			// displayHtmlUrl({play_duration:15000, content: 'http://botq.localhost/pages/chrono.html#msg1'});
+			//displayHtmlUrl({play_duration:15000, content: 'http://botq.localhost/pages/chrono.html#msg1'});
+			
 			
 			worker = new Worker('htmlCliWorker.js?'+(new Date()/1000));
 			worker.addEventListener('message', workerOnMessage, false);
@@ -83,17 +84,19 @@ html, body {
 
 			console.log('displayHtmlUrl start for '+ message.play_duration);
 
+			var content = JSON.parse( message.content );
+			
 			$('#playground').html(
 				'<style>'
 				+'#theIframe {'
-				+'position : absolute;'
+				+'/*position : absolute;'
 				+'top      : 0;'
 				+'left     : 0;'
-				+'height   : 200px;'
+				+'height   : 200px;*/'
 				+'}'
 				+'</style>'
 				+'<iframe id="theIframe"'
-				+' src="' + message.content + '"'
+				+' src="' + content.url + '"'
 				+' width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" />');
 
 			staticMediaTimer = setTimeout( displayHtmlUrlOnTimer, message.play_duration, message);

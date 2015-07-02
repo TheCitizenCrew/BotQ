@@ -40,7 +40,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             'play_loop' => false,
             'play_duration' => 30,
             'content_type' => 'application/url',
-            'content' => 'http://sanibot.org'
+            'content' => '{"url": "http://sanibot.org"}'
         ]);
         // normal message, play video
         $msg = \App\Models\Message::create([
@@ -71,7 +71,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             // 'priority_action' => 'stop',
             'play_duration' => 5,
             'content_type' => 'application/url',
-            'content' => 'http://comptoir.net'
+            'content' => '{"url": "http://comptoir.net"}'
         ]);
     }
 
@@ -88,17 +88,17 @@ class ChannelsAndMessagesSeeder extends Seeder
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . (++ $msgLabelIdx),
-            'play_duration' => 5,
+            'play_duration' => 8000,
             'content_type' => 'application/url',
-            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
+            'content' => '{"url": "http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx . '"}'
         ]);
         // normal message, play web page
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . (++ $msgLabelIdx),
-            'play_duration' => 5,
+            'play_duration' => 5000,
             'content_type' => 'application/url',
-            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
+            'content' => '{"url": "http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx . '"}'
         ]);
         // at time message
         $msg = \App\Models\Message::create([
@@ -106,9 +106,9 @@ class ChannelsAndMessagesSeeder extends Seeder
             'label' => 'msg#' . (++ $msgLabelIdx),
             'priority_action' => 'pause',
             'play_at_time' => '11:00:00',
-            'play_duration' => 5,
+            'play_duration' => 5000,
             'content_type' => 'application/url',
-            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
+            'content' => '{"url": "http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx . '"}'
         ]);
     }
 }
