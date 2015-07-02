@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chrono</title>
+</head>
+<body>
+<h1>Chrono</h1>
+<h2 id="title"></h2>
+<div id="chrono"></div>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+var timer = null ;
+require(['jquery'], function($) {
+
+	$('#title').html( window.location.hash );
+
+	timer = setInterval(pulse, 1000);
+	
+});
+
+function pulse()
+{
+	var d = Date.now();
+	// TODO : format the time
+	//$('#chrono').html( d.format('HH:mm:ii') );
+	$('#chrono').html( d.toString() );
+}
+</script>
+</body>
+</html>
