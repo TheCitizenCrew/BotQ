@@ -7,9 +7,10 @@ class ChannelsAndMessagesSeeder extends Seeder
 
     public function run()
     {
-        // DB::table('channels')->delete();
+        DB::table('channels')->delete();
         // cascading delete
         // DB::table('messages')->delete();
+        
         $channel = \App\Models\Channel::create([
             'label' => 'Channel #1',
             'description' => 'Une seed channel'
@@ -19,44 +20,95 @@ class ChannelsAndMessagesSeeder extends Seeder
             error_log(var_export($channel->getErrors(), true));
         }
         
+        // $this->messsageSet01($channel);
+        $this->messsageSet02($channel);
+    }
+
+    /**
+     * test priority and invalid content-type
+     * 
+     * @param unknown $channel            
+     */
+    function messsageSet01($channel)
+    {
+        $msgLabelIdx = 1;
+        
+        // normal message, play web page
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #1',
-            'priority' => 100,
-            'priority_action' => 'stop',
+            'label' => 'msg#' . ($msgLabelIdx ++),
             'play_loop' => false,
-            //'play_at_time' => '',
-            //'play_duration' => 0,
+            'play_duration' => 30,
             'content_type' => 'application/url',
-            'content' => 'http://sanibot.org',
-            //'status_got' => null,
-            //'status_done' => null,
-            //'status_aborted' => null
+            'content' => 'http://sanibot.org'
         ]);
+        // normal message, play video
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #2',
+            'label' => 'msg#' . ($msgLabelIdx ++),
             'content_type' => 'video/mp4',
-            'content' => 'http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v',
+            'content' => 'http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v'
         ]);
+        // unknow content type message
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #3',
+            'label' => 'msg#' . ($msgLabelIdx ++),
             'content_type' => 'dummy',
-            'content' => 'bla bla',
+            'content' => 'bla bla'
+        ]);
+        // normal message, play video
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'video/mp4',
+            'content' => 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download'
         ]);
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #4',
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'priority' => 100,
+            'priority_action' => 'pause',
+            // 'priority_action' => 'stop',
             'play_duration' => 5,
             'content_type' => 'application/url',
-            'content' => 'http://sanilabo.org',
+            'content' => 'http://comptoir.net'
         ]);
+    }
+
+    /**
+     * test play_at_time message
+     * 
+     * @param unknown $channel            
+     */
+    function messsageSet02($channel)
+    {
+        $msgLabelIdx = 0;
+        
+        // normal message, play web page
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
-            'label' => 'msg #5',
-            'content_type' => 'video/mp4',
-            'content' => 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download',
+            'label' => 'msg#' . (++ $msgLabelIdx),
+            'play_duration' => 5,
+            'content_type' => 'application/url',
+            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
+        ]);
+        // normal message, play web page
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . (++ $msgLabelIdx),
+            'play_duration' => 5,
+            'content_type' => 'application/url',
+            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
+        ]);
+        // at time message
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . (++ $msgLabelIdx),
+            'priority_action' => 'pause',
+            'play_at_time' => '11:00:00',
+            'play_duration' => 5,
+            'content_type' => 'application/url',
+            'content' => 'http://botq.localhost/pages/chrono.html#msg' . $msgLabelIdx
         ]);
     }
 }

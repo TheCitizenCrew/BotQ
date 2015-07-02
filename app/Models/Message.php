@@ -92,22 +92,18 @@ class Message extends Model implements ValidatingModelInterface
 
     public function scopeNotDone($query)
     {
-        return $query->where('status_got', '=', '')->orWhere('status_got', '=', null);
-    }
-
-    public static function getMessagesSet($channelId)
-    {
-        return Message::forChannel($channelId)->notDone()
-            ->orderBy('priority', 'desc')
-            ->orderBy('id', 'asc')
-            ->
-        // ->groupBy('priority')
-        limit(2)
-            ->get();
+        // return $query->where('status_got', '=', '')->orWhere('status_got', '=', null);
+        $q = Message::newQueryWithoutScopes()->where('status_got', '=', '')->orWhere('status_got', '=', null);
+        return $query->addNestedWhereQuery( $q->getQuery() );
     }
 
     public static function setMessageStatus($channelId, $messageId, $status)
     {
+        /**
+         * for debug : reset status :
+         * update messages set status_got=null, status_done=null, status_aborted=null where channel_id=1
+         */
+
         $m = Message::find($messageId);
         if ($m->channel_id != $channelId) {
             throw new Exception('Channel does not match ' . $channelId . ' ' . $messageId);

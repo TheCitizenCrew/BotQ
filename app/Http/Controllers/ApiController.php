@@ -22,9 +22,36 @@ class ApiController extends Controller
         return response()->json($stats);
     }
 
+    /**
+     * Select 2 messages as client's jobs
+     *
+     * Order : priority, play_time, id
+     *
+     * @param unknown $channelId
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getMessagesSet($channelId)
     {
-        $messagesSet = Message::getMessagesSet($channelId);
+        $d = new \Carbon\Carbon();
+     
+        $q = Message::forChannel($channelId)->notDone()
+            ->orderBy('priority', 'desc')
+            ->orderBy('play_at_time', 'desc')
+            ->orderBy('id', 'asc')            
+            ->limit(2)
+            ;
+        
+        // and a nested query for 'play_at_time'
+        $m = new Message();
+        $q2 = $m->newQueryWithoutScopes()
+            //->where('play_at_time', '=', '12:00:00')
+            ->where('play_at_time', '=', $d->hour.':'.$d->minute.':00')
+            ->orWhere('play_at_time', '=', null);
+        $q->addNestedWhereQuery( $q2->getQuery() );
+        
+        //error_log($q->toSql());
+        $messagesSet = $q->get();
+        
         return response()->json($messagesSet);
     }
 
@@ -33,5 +60,4 @@ class ApiController extends Controller
         $m = Message::setMessageStatus($channelId, $messageId, $status);
         return response()->json($m);
     }
-
 }

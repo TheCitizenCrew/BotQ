@@ -18,6 +18,9 @@ var botQPullTimer = null;
 var messageCurrent = null;
 var messageNext = null;
 
+/**
+ * Listen to client's messages
+ */
 self.addEventListener('message', function(e) {
 
 	var data = e.data;
@@ -132,12 +135,15 @@ function onXhrResponse(err, data, xhr) {
 				}
 			}
 
-		} else if( json[0].priority > messageCurrent.priority) {
+		} else if(
+				json[0].priority > messageCurrent.priority
+				|| json[0].play_at_time!=""
+				) {
 
 			// new message with higher priority
+			// or that it's time to play
 			messageCurrent = json[0];
 
-			// Send now to htmlClient
 			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			self.postMessage(messageCurrent);

@@ -36,7 +36,8 @@ html, body {
 		});
 
 		/**
-		 * 
+		 * Listen on worker's messages
+		 
 		 * instanceof ne fonctionne plus, après être passé dans la machine à message du WebWorker tous les objets sont de l'instance Object !
 		 */
 		function workerOnMessage(e) {
