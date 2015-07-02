@@ -85,19 +85,25 @@ html, body {
 			console.log('displayHtmlUrl start for '+ message.play_duration);
 
 			var content = JSON.parse( message.content );
-			
-			$('#playground').html(
-				'<style>'
-				+'#theIframe {'
-				+'/*position : absolute;'
-				+'top      : 0;'
-				+'left     : 0;'
-				+'height   : 200px;*/'
-				+'}'
-				+'</style>'
-				+'<iframe id="theIframe"'
+
+			var html = '' ;
+
+			if( content.style){
+				html += '<style>'
+					+'#theIframe {'
+					+'/*position : absolute;'
+					+'top      : 0;'
+					+'left     : 0;'
+					+'height   : 200px;*/'
+					+'}'
+					+'</style>';
+			}
+
+			html += '<iframe id="theIframe"'
 				+' src="' + content.url + '"'
-				+' width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" />');
+				+' width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" />';
+
+				$('#playground').html(html);
 
 			staticMediaTimer = setTimeout( displayHtmlUrlOnTimer, message.play_duration, message);
 		}
