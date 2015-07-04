@@ -8,7 +8,13 @@
 </head>
 <body>
 
+<select id="serverurl">
+	<option value="ws://html5rocks.websocket.org/echo">ws://html5rocks.websocket.org/echo</option>
+	<option value="ws://echo.websocket.org" selected="selected">ws://echo.websocket.org</option>
+</select>
 <button id="talk">talk</button>
+
+<div id="playground"></div>
 
 <script src="/js/require.js"></script>
 <script>
@@ -18,27 +24,48 @@ var connection ;
 
 require(['jquery'], function($) {
 
-	connection = new WebSocket('ws://html5rocks.websocket.org/echo', ['soap', 'xmpp']);
-	// When the connection is open, send some data to the server
-	connection.onopen = function () {
-	  connection.send('Ping'); // Send the message 'Ping' to the server
-	};
+	$('#serverurl').change(function(e){
+		
+		console.log('selected server : '+$('#serverurl').val());
 
-	// Log errors
-	connection.onerror = function (error) {
-	  console.log('WebSocket Error ' + error);
-	};
+		if( connection ){
+			console.log('closing connection');
+			connection.close();			
+		}
 
-	// Log messages from the server
-	connection.onmessage = function (e) {
-	  console.log('Server: ' + e.data);
-	};
+		connection = new WebSocket( $('#serverurl').val() );
+
+		// When the connection is open, send some data to the server
+		connection.onopen = function () {
+			connection.send('Ping'); // Send the message 'Ping' to the server
+		};
+
+		// Log errors
+		connection.onerror = function (error) {
+			println('WebSocket Error: ' + error);
+		};
+
+		// Log messages from the server
+		connection.onmessage = function (e) {
+			console.log(e);
+			println('Server: ' + e.data);
+		};
+	});
 
 	$('#talk').click(function(e){
-
-		connection.send('your message');
+		connection.send('itꞌs time '+Date.now());
 	});
+
+	$('#serverurl').val('ws://echo.websocket.org');
+	$('#serverurl').change();
+	
 });
+
+function println(msg)
+{
+	console.log(msg);
+	$('#playground').html( $('#playground').html() + "<p>"+msg+"</p>" );
+}
 </script>
 
 </body>
