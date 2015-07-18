@@ -39,19 +39,20 @@ class ApiController extends Controller
             ->orderBy('play_at_time', 'desc')
             ->orderBy('id', 'asc')
             ->limit(2);
-        
+
         // to force seconds to 00
         $time_hms = str_pad($d->hour, 2, '0', STR_PAD_LEFT) . ':' . str_pad($d->minute, 2, '0', STR_PAD_LEFT) . ':00';
 
         // error_log( 'play_at_time: '. $time_hms );
-        
+
         // and a nested query for 'play_at_time'
         $m = new Message();
         $q2 = $m->newQueryWithoutScopes()
             ->where('play_at_time', '=', $time_hms)
-            ->orWhere('play_at_time', '=', null);
+            ->orWhere('play_at_time', '=', null)
+            ->orWhere('play_at_time', '=', '');
         $q->addNestedWhereQuery($q2->getQuery());
-        
+
         // error_log($q->toSql());
         $messagesSet = $q->get();
         
