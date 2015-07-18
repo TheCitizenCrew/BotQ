@@ -10,8 +10,9 @@
 
 <div>
 Urgent message:
-	<input type="text" id="urgentMessageText" size="32" placeholder="urgent message text" value="Ceci est un message urgent !" />
-	<button onclick="sendUrgentMessage({{$channel->id}})">send</button>
+	<input type="text" id="textMessage" size="42" placeholder="message text" value="Ceci est un message de texte pour ne rien dire." />
+	<input type="checkbox" id="textMessageUrgent" value="1000" />urgent
+	<button onclick="sendTextMessage({{$channel->id}})">send</button>
 </div>
 
 <h2>Messages
@@ -46,7 +47,7 @@ Urgent message:
 			@endif
 		</td>
 		<td> {{ $message->priority_action }} </td>
-		<td> @if( $message->play_loop == '1') On @else Off @endif </td>
+		<td> @if( $message->play_loop == '1') <span class="label label-warning">On</span> @else Off @endif </td>
 		<td>
     		@if( $message->play_at_time != '')
     			<span class="label label-warning">{{ $message->play_at_time }}</span>
@@ -94,10 +95,16 @@ function resetStatus(channelId, messageId)
 	});
 }
 
-function sendUrgentMessage(channelId)
+function sendTextMessage(channelId)
 {
-	var t = $('#urgentMessageText').val();
-	var url = '/api/urgentTextMessage/'+channelId+'/'+encodeURI(t) ;
+	var text = $('#textMessage').val();
+	var priority = $('#textMessageUrgent');
+	if( priority.is(':checked') )
+		priority = 1000 ;
+	else
+		priority = 0 ;
+
+	var url = '/api/textMessage/'+channelId+'/'+priority+'/'+encodeURI(text) ;
 	$.getJSON( url, function( data ) {
 		window.location.reload();
 	});

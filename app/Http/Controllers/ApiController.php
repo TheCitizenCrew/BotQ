@@ -70,7 +70,7 @@ class ApiController extends Controller
         return response()->json($m);
     }
 
-    public function addUrgentTextMessage($channelId, $text)
+    public function addTextMessage($channelId, $priority, $text)
     {
         $text = urldecode($text);
         $text = str_replace('"', '\"', $text);
@@ -78,7 +78,7 @@ class ApiController extends Controller
         $msg = \App\Models\Message::create([
             'channel_id' => $channelId,
             'label' => 'msg#' . time(),
-            'priority' => 1000,
+            'priority' => $priority,
             'priority_action' => 'pause',
             'play_loop' => false,
             'play_duration' => 10*1000,

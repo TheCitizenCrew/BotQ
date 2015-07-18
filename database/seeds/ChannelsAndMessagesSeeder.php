@@ -13,16 +13,17 @@ class ChannelsAndMessagesSeeder extends Seeder
         
         $channel = \App\Models\Channel::create([
             'label' => 'Channel #1',
-            'description' => 'Une seed channel'
+            'description' => 'A seeded channel'
         ]);
         
         if (! $channel->id) {
             error_log(var_export($channel->getErrors(), true));
         }
         
-        $this->messsageSet01($channel);
+        //$this->messsageSet01($channel);
         //$this->messsageSet02($channel);
         //$this->messsageSet03($channel);
+        $this->messsageSet_TestPlayLoop($channel);
     }
 
     function messsageSet01($channel)
@@ -154,4 +155,24 @@ class ChannelsAndMessagesSeeder extends Seeder
         ]);
     }
 
+    /**
+     * To test message.play_loop
+     * 
+     * @param number $channel
+     */
+    function messsageSet_TestPlayLoop($channel)
+    {
+        $msgLabelIdx = 1;
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_loop' => '1',
+            'play_duration' => 60*1000,
+            'content_type' => 'application/url',
+            'content' => '{"url": "http://comptoir.net"}'
+        ]);
+
+    }
+    
 }

@@ -27,6 +27,8 @@ self.addEventListener('message', function(e) {
 
 	var data = e.data;
 	console.log('htmlCliWorker.js received cmd "' + data.cmd + '"');
+	console.log(data);
+
 	switch( data.cmd ){
 
 	case 'say':
@@ -159,11 +161,13 @@ function onXhrResponse(err, data, xhr) {
 
 		} else if(
 				json[0].priority > messageCurrent.priority
-				|| json[0].play_at_time!=''
+				|| json[0].play_at_time != ''
+				/*|| messageCurrent.play_loop == '1'*/
 				) {
 
 			// new message with higher priority
 			// or that it's time to play
+			// or the current message is waiting in an infinite loop
 			console.log('onXhrResponse() case #3');
 			
 			messageCurrent = json[0];

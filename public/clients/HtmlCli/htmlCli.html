@@ -29,9 +29,9 @@ html, body {
 <body>
 	<div id="playground"></div>
 
-	<script src="/js/require.js"></script>
-	<script src="htmlCliCommon.js"></script>
-	<script>
+	<script type="text/javascript" src="/js/require.js"></script>
+	<script type="text/javascript" src="htmlCliCommon.js"></script>
+	<script type="text/javascript">
 		"use strict";
 
 		var worker = null;
@@ -67,7 +67,7 @@ html, body {
 			if( messagePlaying != null )
 			{
 				if( staticMediaTimer ){
-					clearTimeout(staticMediaTimer);
+					clearTimeout( staticMediaTimer );
 					staticMediaTimer = null ;
 				}
 				// Abort current message
@@ -78,7 +78,7 @@ html, body {
 				// Should never happend !!
 				if( staticMediaTimer ){
 					console.log('ERROR, no messagePlaying but a staticMediaTimer');
-					clearTimeout(staticMediaTimer);
+					clearTimeout( staticMediaTimer );
 					staticMediaTimer = null ;
 				}
 			}
@@ -108,14 +108,60 @@ html, body {
 			catch(ex)
 			{
 				console.log('ERROR: '+ex.name+', '+ex.message );
+				console.log(ex);
 				messagePlayDone(messagePlaying, 'error');
 			}
 		}
 
+		function staticMediaOnTime( message )
+		{
+			console.log('staticMediaOnTime() for id: '+message.id);
+			//$(this).jPlayer("play"); // play again !
+			
+			if( message.play_loop=='1' )
+			{
+				messagePlayDone(message, 'done');			
+				staticMediaTimer = setTimeout( staticMediaOnTime, message.play_duration, message);
+				return;
+			}
+
+			staticMediaTimer = null ;
+			messagePlayDone(message, 'done');			
+		}
+
+		/**
+		 * to call when a message play is finished (done, aborted or error).
+		 */
+		function messagePlayDone(message, status) {
+
+			console.log('messagePlayDone() id:'+message.id+', status:'+status);
+
+			var cmd ;
+			if( status == 'done') {
+				cmd = 'messageDone';
+			} else if( status == 'aborted') {
+				cmd = 'messageAborted';
+			} else if( status == 'error') {
+				cmd = 'messageError';
+			}
+
+			if( message.play_loop != '1')
+			{
+				messagePlaying = null ;
+				displayWaitForInstruction();
+			}
+
+			worker.postMessage({
+				'cmd' : cmd,
+				'message' : message
+			}); // Send data to our worker.
+
+		}
+
 		function displayPlainText(textMessage)
 		{
-			console.log('displayPlainText');
-			
+			console.log('displayPlainText start for '+ textMessage.play_duration +'ms (loop='+(textMessage.play_loop=='1'?'On':'Off')+')');
+
 			var content = JSON.parse( textMessage.content );
 			console.log('displayPlainText content: ');
 			console.log(content);
@@ -128,6 +174,10 @@ html, body {
 
 			$('#playground').html(html);
 
+			if( textMessage.play_duration==0 && textMessage.play_loop=='1' )
+			{
+				textMessage.play_duration = 10 ;
+			}
 			staticMediaTimer = setTimeout( staticMediaOnTime, textMessage.play_duration, textMessage);
 		}
 
@@ -219,14 +269,6 @@ html, body {
 			staticMediaTimer = setTimeout( staticMediaOnTime, message.play_duration, message);
 		}
 
-		function staticMediaOnTime( message )
-		{
-			console.log('staticMediaOnTime() for id: '+message.id);
-			//$(this).jPlayer("play"); // play again !
-			staticMediaTimer = null ;
-			messagePlayDone(message, 'done');			
-		}
-
 		function displayVideo(videomessage) {
 
 			$('#playground')
@@ -299,31 +341,6 @@ html, body {
 			$('#playground').html(html);			
 		}
 
-		/**
-		 * to call when a message play is finished (done, aborted or error).
-		 */
-		function messagePlayDone(message, status) {
-
-			console.log('messagePlayDone() id:'+message.id+', status:'+status);
-			messagePlaying = null ;
-
-			var cmd ;
-			if( status == 'done') {
-				cmd = 'messageDone';
-			} else if( status == 'aborted') {
-				cmd = 'messageAborted';
-			} else if( status == 'error') {
-				cmd = 'messageError';
-			}
-
-			displayWaitForInstruction();
-
-			worker.postMessage({
-				'cmd' : cmd,
-				'message' : message
-			}); // Send data to our worker.
-
-		}
 	</script>
 </body>
 </html>
