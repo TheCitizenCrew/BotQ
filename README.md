@@ -11,10 +11,18 @@
 
 ## RoadMap
 
-- [ ] Design architecture
-  - [ ] Data
-  - [ ] Client(s)
-  - [ ] Server
+- [x] Design architecture
+- [x] Data
+- [x] Html Client Frontoffice
+ - [x] Html Client Engine
+ - [ ] Html Client IHM
+- [x] Html Client Backoffice
+ - [x] Html Client Engine
+ - [ ] Html Client IHM
+- [ ] Android stuff
+ - [ ] Android Client
+ - [x] Android device Gateway
+- [x] Server
 
 ## Server Installation
 
@@ -34,6 +42,14 @@ Use "[composer](https://getcomposer.org/)".
 	}
 	...
 
+### Installation
+
+<http://botq.localhost>
+
+## Html Client
+
+<http://botq.localhost/clients/HtmlCli/htmlCli.html>
+
 ## Android Client
 
 TODO
@@ -42,5 +58,16 @@ TODO
 
 TODO
 
+## Dev tools
+
+### Filling the database
+
+Look at database/seeds/ChannelsAndMessagesSeeder.php to differents messages sets, then
+
+	./artisan migrate:refresh --seed
+
+ezefdsf
+
+
 [workInProgressImage]: http://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Work_in_progress_%283709389075%29.jpg/320px-Work_in_progress_%283709389075%29.jpg?raw=true
- 
+
