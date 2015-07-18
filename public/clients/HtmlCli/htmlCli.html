@@ -157,7 +157,7 @@ html, body {
 
 		function displayHtmlUrl(message) {
 
-			console.log('displayHtmlUrl start for '+ message.play_duration);
+			console.log('displayHtmlUrl start for '+ message.play_duration +'ms');
 
 			var content = JSON.parse( message.content );
 			console.log('displayHtmlUrl content: ');
@@ -187,7 +187,7 @@ html, body {
 
 		function staticMediaOnTime( message )
 		{
-			console.log('displayHtmlUrl ended');
+			console.log('staticMediaOnTime() for id: '+message.id);
 			//$(this).jPlayer("play"); // play again !
 			staticMediaTimer = null ;
 			messagePlayDone(message, 'done');			
@@ -270,6 +270,7 @@ html, body {
 		 */
 		function messagePlayDone(message, status) {
 
+			console.log('messagePlayDone() id:'+message.id+', status:'+status);
 			messagePlaying = null ;
 
 			var cmd ;

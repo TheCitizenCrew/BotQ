@@ -42,6 +42,13 @@ class ChannelsAndMessagesSeeder extends Seeder
             'content_type' => 'application/url',
             'content' => '{"url": "http://sanilabo.org"}'
         ]);
+        // normal message, play tts
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'application/tts',
+            'content' => '{"text":"On dirait que BotQ est tombé en marche ! C\'est chouette"}'
+        ]);
         // normal message, play video
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
@@ -69,9 +76,9 @@ class ChannelsAndMessagesSeeder extends Seeder
             'priority' => 100,
             'priority_action' => 'pause',
             // 'priority_action' => 'stop',
-            'play_duration' => 5*1000,
+            'play_duration' => 10*1000,
             'content_type' => 'application/url',
-            'content' => '{url: "http://comptoir.net"}'
+            'content' => '{"url": "http://comptoir.net"}'
         ]);
     }
 

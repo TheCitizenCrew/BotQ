@@ -97,6 +97,16 @@ class Message extends Model implements ValidatingModelInterface
         return $query->addNestedWhereQuery( $q->getQuery() );
     }
 
+    /**
+     * Set message's status to "got", "done" or "aborted".
+     * It's possible to reset all status with $status="reset".
+     * 
+     * @param number $channelId
+     * @param number $messageId
+     * @param string $status
+     * @throws InvalidArgumentException
+     * @return \App\Models\Message
+     */
     public static function setMessageStatus($channelId, $messageId, $status)
     {
         /**
@@ -106,10 +116,11 @@ class Message extends Model implements ValidatingModelInterface
 
         $m = Message::find($messageId);
         if ($m->channel_id != $channelId) {
-            throw new Exception('Channel does not match ' . $channelId . ' ' . $messageId);
+            throw new InvalidArgumentException('Channel does not match ' . $channelId . ' ' . $messageId);
         }
         // $m->status_got = \Carbon\Carbon::now('Europe/Paris');
         // $m->status_got = \Carbon\Carbon::now();
+
         switch ($status) {
             case 'got':
                 $m->status_got = new \Carbon\Carbon();
@@ -119,6 +130,9 @@ class Message extends Model implements ValidatingModelInterface
                 break;
             case 'aborted':
                 $m->status_aborted = new \Carbon\Carbon();
+                break;
+            case 'reset':
+                $m->status_got = $m->status_done = $m->status_aborted = null ;
                 break;
             default:
                 throw new InvalidArgumentException('Invalid message status "' . $status . '"');

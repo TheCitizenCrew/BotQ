@@ -57,6 +57,13 @@ class ApiController extends Controller
         return response()->json($messagesSet);
     }
 
+    /**
+     * 
+     * @param number $channelId
+     * @param number $messageId
+     * @param string $status could be "got", "done", "aborted" or "reset"
+     * @return \Symfony\Component\HttpFoundation\Response as JSON
+     */
     public function setMessageStatus($channelId, $messageId, $status)
     {
         $m = Message::setMessageStatus($channelId, $messageId, $status);

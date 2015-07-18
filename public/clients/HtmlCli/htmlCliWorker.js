@@ -193,7 +193,7 @@ function onXhrResponse(err, data, xhr) {
  * @param xhr
  */
 function onXhrResponseMessageStatus(err, data, xhr) {
-	console.log('onXhrResponseMessageStatus() err: '+err+', data: '+data);
+	//console.log('onXhrResponseMessageStatus() err: '+err+', data: '+data);
 }
 
 /**

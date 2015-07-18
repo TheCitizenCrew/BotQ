@@ -38,7 +38,10 @@
 		<td>{{ $message->play_duration }}</td>
 		<td>{{ $message->content_type }}</td>
 		<td>{{ $message->content }}</td>
-		<td>{{ $message->status_got }}</td>
+		<td>
+		  {{ $message->status_got }}
+		  <button onclick="resetStatus({{$channel->id}}, {{$message->id}})">clear</button>
+		</td>
 		<td>{{ $message->status_done }}</td>
 		<td>{{ $message->status_aborted }}</td>
 		<td><a
@@ -52,10 +55,26 @@
 	href="{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}">new
 	message</a>
 
-@stop @section('javascript') @parent
-<script>
-	"use strict" ;
+@stop
 
-	</script>
+@section('javascript')
+@parent
+<script src="/js/require.js"></script>
+<!--script src="/js/jquery/jquery.min.js"></script-->
+<script>
+require(['jquery'], function($) {
+    //$('body').css('background-color', 'black');
+});
+
+function resetStatus(channelId, messageId)
+{
+	var url = '/api/messageStatus/'+channelId+'/'+messageId+'/reset' ;
+	$.getJSON( url, function( data ) {
+		window.location.reload();
+	});
+
+}
+
+</script>
 
 @stop
