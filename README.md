@@ -12,7 +12,7 @@
 ## RoadMap
 
 - [x] Design architecture
-- [x] Data
+- [x] Data => see <https://github.com/TheCitizenCrew/BotQ/wiki>
 - [x] Html Client Frontoffice
  - [x] Html Client Engine
  - [ ] Html Client IHM

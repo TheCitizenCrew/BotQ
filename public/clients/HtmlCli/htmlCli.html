@@ -121,6 +121,9 @@ html, body {
 			console.log(content);
 
 			var html = '' ;
+			if( content.css){
+				html += '<style>'+content.css+'</style>' ;
+			}
 			html += '<div><blockquote>'+content.text+'</blockquote></div>';
 
 			$('#playground').html(html);
@@ -193,16 +196,18 @@ html, body {
 			console.log(content);
 
 			var html = '' ;
-
-			if( content.style){
-				html += '<style>'
-					+'#theIframe {'
-					+'/*position : absolute;'
-					+'top      : 0;'
-					+'left     : 0;'
-					+'height   : 200px;*/'
-					+'}'
-					+'</style>';
+			if( content.css ){
+				/*
+				<style>
+				#theIframe {
+					position : absolute;
+					top      : 0;
+					left     : 0;
+					height   : 200px;
+				}
+				</style>
+				*/
+				html += '<style>'+content.css+'</style>' ;
 			}
 
 			html += '<iframe id="theIframe"'

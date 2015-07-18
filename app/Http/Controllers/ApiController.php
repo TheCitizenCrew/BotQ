@@ -83,7 +83,10 @@ class ApiController extends Controller
             'play_loop' => false,
             'play_duration' => 10*1000,
             'content_type' => 'text/plain',
-            'content' => '{"text": "'.$text.'"}'
+            'content' => '{'
+                .'"text": "'.$text.'",'
+                .'"css": "#playground{ position:absolute; top:50%; text-align:center; font-size:200%; color:yellow; }"'
+            .'}'
         ]);
         $msg->save();
         return response()->json($msg);
