@@ -19,7 +19,7 @@
 		<td>priority action</td>
 		<td>play loop</td>
 		<td>play at time</td>
-		<td>play duration</td>
+		<td>play duration (ms)</td>
 		<td>content_type</td>
 		<td>content</td>
 		<td>status got</td>
@@ -51,7 +51,7 @@
 			@if( $message->content_type=='application/url' && $message->play_duration == '')
 				<span class="label label-danger"> ? </span>
 			@else
-				{{ $message->play_duration }}
+				{{ number_format($message->play_duration,0,'',' ') }}
 			@endif
 		</td>
 		<td>{{ $message->content_type }}</td>
