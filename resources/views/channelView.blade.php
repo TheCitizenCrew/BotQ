@@ -39,7 +39,17 @@
 			@endif
 		</td>
 		<td>{{ $message->priority_action }}</td>
-		<td>@if( $message->play_loop == '1') <span class="label label-warning">On</span> @else Off @endif</td>
+		<td>
+			@if( $message->play_loop == '1')
+				@if( $message->priority > 0 )
+					<span class="label label-danger">On</span>
+				@else
+					<span class="label label-warning">On</span>
+				@endif
+			@else
+				Off
+			@endif
+		</td>
 		<td>
     		@if( $message->play_at_time != '')
     			<span class="label label-warning">{{ $message->play_at_time }}</span>
