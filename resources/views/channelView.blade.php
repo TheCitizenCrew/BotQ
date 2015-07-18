@@ -29,23 +29,40 @@
 	</tr>
 	@foreach ($channel->messages as $message)
 	<tr>
-		<td>{{ $message->id }}</td>
+ 		<td>{{ $message->id }}</td>
 		<td>{{ $message->label }}</td>
-		<td>{{ $message->priority }}</td>
+		<td>
+			@if( $message->priority > 0 )
+			<span class="label label-warning">{{ $message->priority }}</span>
+			@else
+			{{ $message->priority }}
+			@endif
+		</td>
 		<td>{{ $message->priority_action }}</td>
-		<td>@if( $message->play_loop == '1') On @else Off @endif</td>
-		<td>{{ $message->play_at_time }}</td>
-		<td>{{ $message->play_duration }}</td>
+		<td>@if( $message->play_loop == '1') <span class="label label-warning">On</span> @else Off @endif</td>
+		<td>
+    		@if( $message->play_at_time != '')
+    			<span class="label label-warning">{{ $message->play_at_time }}</span>
+    		@else
+    			{{ $message->play_at_time }}
+    		@endif
+		</td>
+		<td>
+			@if( $message->content_type=='application/url' && $message->play_duration == '')
+				<span class="label label-danger"> ? </span>
+			@else
+				{{ $message->play_duration }}
+			@endif
+		</td>
 		<td>{{ $message->content_type }}</td>
 		<td>{{ $message->content }}</td>
-		<td>
-		  {{ $message->status_got }}
-		  <button onclick="resetStatus({{$channel->id}}, {{$message->id}})">clear</button>
-		</td>
+		<td>{{ $message->status_got }}</td>
 		<td>{{ $message->status_done }}</td>
 		<td>{{ $message->status_aborted }}</td>
 		<td><a
-			href="{{ app('url')->route('MessageEdit', ['id'=>$message->id]) }}">edit</a>
+            href="{{ app('url')->route('MessageEdit', ['id'=>$message->id]) }}">edit</a>
+            <br/>
+            <button class="btn btn-default btn-xs" onclick="resetStatus({{$channel->id}}, {{$message->id}})">clear status</button>
 		</td>
 	</tr>
 	@endforeach
@@ -59,8 +76,8 @@
 
 @section('javascript')
 @parent
-<script src="/js/require.js"></script>
 <!--script src="/js/jquery/jquery.min.js"></script-->
+<script src="/js/require.js"></script>
 <script>
 require(['jquery'], function($) {
     //$('body').css('background-color', 'black');
@@ -76,5 +93,4 @@ function resetStatus(channelId, messageId)
 }
 
 </script>
-
 @stop

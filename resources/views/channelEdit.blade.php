@@ -1,8 +1,10 @@
  @extends('layout') @section('title', 'Channel edit')
 
-@section('content') @if(empty($channel->id))
-<h1>Créer un channel</h1>
-<form class="form-horizontal" method="POST" action="/channel">
+@section('content')
+
+	@if(empty($channel->id))
+	<h1>Créer un channel</h1>
+	<form class="form-horizontal" method="POST" action="/channel">
 	@else
 	<h1>Modifier un channel</h1>
 	<form class="form-horizontal" method="POST"
