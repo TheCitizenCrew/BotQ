@@ -2,15 +2,22 @@
 
 @section('content')
 
-<h1>Channel</h1>
+<h1>Channel <button class="btn btn-default btn-xs" onclick="window.location = '{{ app('url')->route('ChannelEdit', ['id'=>$channel->id]) }}';">edit</button></h1>
 <ul>
 	<li>{{ $channel->label }}</li>
 	<li>{{ $channel->description }}</li>
 </ul>
 
-<a href="{{ app('url')->route('ChannelEdit', ['id'=>$channel->id]) }}">Edit</a>
+<div>
+Urgent message:
+	<input type="text" id="urgentMessageText" size="32" placeholder="urgent message text" value="Ceci est un message urgent !" />
+	<button onclick="sendUrgentMessage({{$channel->id}})">send</button>
+</div>
 
-<h2>Messages <button class="btn btn-default btn-xs" onclick="window.location.reload();">refresh</button></h2>
+<h2>Messages
+	<button class="btn btn-default btn-xs" onclick="window.location.reload();">refresh</button>
+	<button class="btn btn-default btn-xs" onclick="window.location='{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}';">new</button>
+</h2>
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>Id</th>
@@ -27,7 +34,7 @@
 		<td>status aborted</td>
 		<td>actions</td>
 	</tr>
-	@foreach ($channel->messages as $message)
+	@foreach ($channel->messages->reverse() as $message)
 	<tr>
  		<td>{{ $message->id }}</td>
 		<td>{{ $message->label }}</td>
@@ -77,16 +84,6 @@
 	</tr>
 	@endforeach
 </table>
-
-<a
-	href="{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}">new
-	message</a>
-
-<div>
-Urgent message:
-	<input type="text" id="urgentMessageText" size="32" placeholder="urgent message text" value="Ceci est un message urgent !" />
-	<button onclick="sendUrgentMessage({{$channel->id}})">send</button>
-</div>
 
 @stop
 
