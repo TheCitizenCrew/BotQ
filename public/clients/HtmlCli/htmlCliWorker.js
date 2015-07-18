@@ -12,7 +12,7 @@
 importScripts('htmlCliCommon.js');
 
 var botQChannel = 1;
-var botQPullFreq = 1000 * 5;
+var botQPullFreq = 5 * 1000 ;
 var botQPullTimer = null;
 
 var messageCurrent = null;
@@ -47,7 +47,7 @@ self.addEventListener('message', function(e) {
 		//
 
 		// Le client a fait son travail, qui est maintenant terminé (done)
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/' + msgStatusString,
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + data.message.id + '/' + msgStatusString,
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		messageCurrent = null ;
 
@@ -68,10 +68,16 @@ self.addEventListener('message', function(e) {
 
 		// messageAborted is not an Error, it's just a ack to update message status on server side
 
-		// Le client a abandonné son travail parcequ'il a reçu un autre message
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/aborted',
+		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + data.message.id + '/aborted',
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		break;
+
+		// Le client a abandonné son travail parcequ'il a reçu un autre message
+		// Si ce n'est pas le cas ... Passons lui le message suivant
+		if( messageCurrent.id == data.message.id )
+		{
+			console.log('################################');
+		}
 
 	case 'start':
 		if( botQPullTimer == null) {
@@ -112,18 +118,20 @@ function onXhrResponse(err, data, xhr) {
 
 	// console.log(data);
 	var json = JSON.parse(data);
-	console.log(json);
 
 	if( json.length == 0) {
-		console.log('JSON empty');
-		messageNext = null;
+		//console.log('JSON empty');
+		// TODO: bug? messageNext = null;
 		return;
 	}
+	console.log(json);
 
 	try {
 
 		if( messageCurrent == null) {
+
 			// Le client n'a plus rien a manger...
+			console.log('onXhrResponse() case #1');
 
 			messageCurrent = json[0];
 
@@ -138,6 +146,9 @@ function onXhrResponse(err, data, xhr) {
 
 		} else if( json[0].id == messageCurrent.id) {
 
+			// c'est le meme message que le message courant
+			console.log('onXhrResponse() case #2');
+
 			if( json.length == 2) {
 				if( messageNext == null) {
 					messageNext = json[1];
@@ -148,11 +159,13 @@ function onXhrResponse(err, data, xhr) {
 
 		} else if(
 				json[0].priority > messageCurrent.priority
-				|| json[0].play_at_time!=null
+				|| json[0].play_at_time!=''
 				) {
 
 			// new message with higher priority
 			// or that it's time to play
+			console.log('onXhrResponse() case #3');
+			
 			messageCurrent = json[0];
 
 			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
@@ -161,11 +174,15 @@ function onXhrResponse(err, data, xhr) {
 
 		} else {
 
+			console.log('onXhrResponse() case #4');
+
 			if( messageNext == null) {
 				messageNext = json[0];
-			} else if( json[0].id != messageNext.id) {
-				messageNext = json[0];
 			}
+			// TODO: bug ?
+			//else if( json[0].id != messageNext.id) {
+			//	messageNext = json[0];
+			//}
 		}
 
 	} catch( e ) {
