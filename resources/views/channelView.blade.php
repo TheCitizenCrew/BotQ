@@ -62,7 +62,7 @@
 		<td><a
             href="{{ app('url')->route('MessageEdit', ['id'=>$message->id]) }}">edit</a>
             <br/>
-            <button class="btn btn-default btn-xs" onclick="resetStatus({{$channel->id}}, {{$message->id}})">clear status</button>
+            <button class="btn btn-default btn-xs" onclick="resetStatus({{$channel->id}},{{$message->id}})">clear status</button>
 		</td>
 	</tr>
 	@endforeach
@@ -71,6 +71,12 @@
 <a
 	href="{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}">new
 	message</a>
+
+<div>
+Urgent message:
+	<input type="text" id="urgentMessageText" size="32" placeholder="urgent message text" value="Ceci est un message urgent !" />
+	<button onclick="sendUrgentMessage({{$channel->id}})">send</button>
+</div>
 
 @stop
 
@@ -89,7 +95,15 @@ function resetStatus(channelId, messageId)
 	$.getJSON( url, function( data ) {
 		window.location.reload();
 	});
+}
 
+function sendUrgentMessage(channelId)
+{
+	var t = $('#urgentMessageText').val();
+	var url = '/api/urgentTextMessage/'+channelId+'/'+encodeURI(t) ;
+	$.getJSON( url, function( data ) {
+		window.location.reload();
+	});
 }
 
 </script>

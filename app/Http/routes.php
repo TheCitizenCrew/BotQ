@@ -39,6 +39,8 @@ $app->group([
     ]);
     $app->get('messagesSet/{channelId:[0-9]+}', 'App\Http\Controllers\ApiController@getMessagesSet');
     $app->get('messageStatus/{channelId:[0-9]+}/{messageId:[0-9]+}/{status}', 'App\Http\Controllers\ApiController@setMessageStatus');
+    $app->get('urgentTextMessage/{channelId:[0-9]+}/{text}', 'App\Http\Controllers\ApiController@addUrgentTextMessage');
+    
 });
 
 $app->group([

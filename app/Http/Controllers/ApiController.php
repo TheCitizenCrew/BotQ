@@ -69,4 +69,24 @@ class ApiController extends Controller
         $m = Message::setMessageStatus($channelId, $messageId, $status);
         return response()->json($m);
     }
+
+    public function addUrgentTextMessage($channelId, $text)
+    {
+        $text = urldecode($text);
+        $text = str_replace('"', '\"', $text);
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channelId,
+            'label' => 'msg#' . time(),
+            'priority' => 1000,
+            'priority_action' => 'pause',
+            'play_loop' => false,
+            'play_duration' => 10*1000,
+            'content_type' => 'text/plain',
+            'content' => '{"text": "'.$text.'"}'
+        ]);
+        $msg->save();
+        return response()->json($msg);
+    }
+
 }
