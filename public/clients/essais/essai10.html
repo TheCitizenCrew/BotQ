@@ -10,7 +10,9 @@
 
 <select id="serverurl">
 	<option value="ws://html5rocks.websocket.org/echo">ws://html5rocks.websocket.org/echo</option>
-	<option value="ws://echo.websocket.org" selected="selected">ws://echo.websocket.org</option>
+	<option value="ws://echo.websocket.org" >ws://echo.websocket.org</option>
+	<option value="ws://192.168.0.10:5000/ping" >ws://192.168.0.10:5000/ping</option>
+	<option value="ws://localhost:8080/ping" >ws://localhost:8080/ping</option>
 </select>
 <button id="talk">talk</button>
 
@@ -24,41 +26,66 @@ var connection ;
 
 require(['jquery'], function($) {
 
+	println(new Date());
+
 	$('#serverurl').change(function(e){
-		
+
 		console.log('selected server : '+$('#serverurl').val());
 
-		if( connection ){
+		if( connection ) {
 			console.log('closing connection');
 			connection.close();			
 		}
 
 		connection = new WebSocket( $('#serverurl').val() );
 
-		// When the connection is open, send some data to the server
+		// When the connection is open
 		connection.onopen = function () {
 			connection.send('Ping'); // Send the message 'Ping' to the server
 		};
 
+		/**
+		 * See http://tools.ietf.org/html/rfc6455#section-7.4.1
+		 * and http://stackoverflow.com/questions/18803971/websocket-onerror-how-to-read-error-description
+		 */
+		connection.onclose = function(event) {
+			/**
+			 * explicite close=1005, reason="" (doc: No status code was actually present)
+			 * client timeout  close.code=1006, reason="" 
+			 */
+			println(new Date());
+			println('WebSocket Closed');
+			console.log(event);
+			console.log('code:');
+			console.log(event.code);
+			console.log('reason:');
+			console.log(event.reason);
+		};
+
 		// Log errors
 		connection.onerror = function (error) {
-			println('WebSocket Error: ' + error);
+			println(new Date());
+			println('WebSocket Error!');
+			console.log(error);
+			console.log('type:');
+			console.log(error.type);
 		};
 
 		// Log messages from the server
 		connection.onmessage = function (e) {
 			console.log(e);
-			println('Server: ' + e.data);
+			println('From server: ' + e.data);
 		};
+
 	});
 
 	$('#talk').click(function(e){
-		connection.send('itꞌs time '+Date.now());
+		connection.send('it\'s time '+Date.now());
 	});
 
 	$('#serverurl').val('ws://echo.websocket.org');
 	$('#serverurl').change();
-	
+
 });
 
 function println(msg)

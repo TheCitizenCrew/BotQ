@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Essai11 AndGWS</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div>
+<select id="serverurl">
+	<option value="ws://192.168.0.10:5000/action" >ws://192.168.0.10:5000/action</option>
+	<option value="ws://localhost:8080/action" >ws://localhost:8080/action</option>
+</select>
+</div>
+
+<div>
+<input type="text" id="sayText" />
+<button id="say">say</button>
+</div>
+
+<div id="playground"></div>
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+
+var url = null ;
+var connection = null ;
+
+require(['jquery'], function($) {
+
+	println(new Date());
+
+	$('#serverurl').change(function(e){
+		connection = null ;
+	});
+
+	$('#say').click(function(e){
+		url = $('#serverurl').val() ;
+		println('selecting server : '+url);
+		var t = $('#sayText').val();
+		send( JSON.stringify( {action:"speak",message:t} ) );
+	});
+
+});
+
+function send( message )
+{
+
+	if( connection != null ) {
+		connection.send(message);
+		return ;
+	}
+
+	connection = new WebSocket( url );
+
+	connection.onopen = function () {
+		println('WebSocket Opened');
+		//connection.send('Ping');
+		connection.send(message);
+	};
+	connection.onclose = function(event) {
+		println('WebSocket Closed');
+		console.log(event);
+	};
+	connection.onerror = function (error) {
+		println('WebSocket Error!');
+		console.log(error);
+	};
+	connection.onmessage = function (e) {
+		console.log(e);
+		println('WebSocket message: ' + e.data);
+		var obj = JSON.parse(e.data);
+		console.log(obj);
+	};
+
+}
+
+function println(msg)
+{
+	console.log(msg);
+	$('#playground').html( $('#playground').html() + "<p>"+msg+"</p>" );
+}
+</script>
+
+</body>
+</html>
