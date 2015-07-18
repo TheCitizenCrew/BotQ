@@ -75,17 +75,26 @@ html, body {
 			}
 			messagePlaying = e.data ;
 
-			if( e.data.content_type.indexOf('video/') == 0) {
-				displayVideo(e.data);
+			try
+			{
+				if( e.data.content_type.indexOf('video/') == 0) {
+					displayVideo(e.data);
 
-			} else if( e.data.content_type == 'application/url' ) {
-				displayHtmlUrl(e.data);
+				} else if( e.data.content_type == 'application/url' ) {
+					displayHtmlUrl(e.data);
 
-			} else if( e.data.content_type == 'application/tts' ) {
-				displayTts(e.data);
+				} else if( e.data.content_type == 'application/tts' ) {
+					displayTts(e.data);
 
-			} else {
-				console.log('ERROR: unknow message type !');
+				} else {
+					console.log('ERROR: unknow message type !');
+					messagePlayDone(e.data, 'error');
+				}
+				
+			}
+			catch(ex)
+			{
+				console.log('ERROR: '+ex.name+', '+ex.message );
 				messagePlayDone(e.data, 'error');
 			}
 		}
@@ -197,21 +206,26 @@ html, body {
 			var media = {
 				title : 'Some video'
 			};
+
+			var content = JSON.parse( videomessage.content );
+			console.log('displayVideo content: ');
+			console.log(content);
+
 			switch( videomessage.content_type ){
 			case 'video/mp4':
-				media.m4v = videomessage.content;
+				media.m4v = content.url;
 				media_supplied = 'm4v';
 				break;
 			case 'video/ogg':
-				media.ogv = videomessage.content;
+				media.ogv = content.url;
 				media_supplied = 'ogv';
 				break;
 			case 'video/webm':
-				media.webmv = videomessage.content;
+				media.webmv = content.url;
 				media_supplied = 'webmv';
 				break;
 			case 'video/flv':
-				media.flv = videomessage.content;
+				media.flv = content.url;
 				media_supplied = 'flv';
 				break;
 			default:

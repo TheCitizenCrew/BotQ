@@ -20,8 +20,8 @@ class ChannelsAndMessagesSeeder extends Seeder
             error_log(var_export($channel->getErrors(), true));
         }
         
-        // $this->messsageSet01($channel);
-        $this->messsageSet02($channel);
+        $this->messsageSet01($channel);
+        //$this->messsageSet02($channel);
     }
 
     /**
@@ -32,22 +32,22 @@ class ChannelsAndMessagesSeeder extends Seeder
     function messsageSet01($channel)
     {
         $msgLabelIdx = 1;
-        
+
         // normal message, play web page
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'play_loop' => false,
-            'play_duration' => 30,
+            'play_duration' => 10*1000,
             'content_type' => 'application/url',
-            'content' => '{"url": "http://sanibot.org"}'
+            'content' => '{"url": "http://sanilabo.org"}'
         ]);
         // normal message, play video
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'content_type' => 'video/mp4',
-            'content' => 'http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v'
+            'content' => '{"url":"http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v"}'
         ]);
         // unknow content type message
         $msg = \App\Models\Message::create([
@@ -61,7 +61,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'content_type' => 'video/mp4',
-            'content' => 'https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download'
+            'content' => '{"url":"https://cloud.comptoir.net/public.php?service=files&t=daded4130946466782bd44adfabf7b30&download"}'
         ]);
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
@@ -69,9 +69,9 @@ class ChannelsAndMessagesSeeder extends Seeder
             'priority' => 100,
             'priority_action' => 'pause',
             // 'priority_action' => 'stop',
-            'play_duration' => 5,
+            'play_duration' => 5*1000,
             'content_type' => 'application/url',
-            'content' => '{"url": "http://comptoir.net"}'
+            'content' => '{url: "http://comptoir.net"}'
         ]);
     }
 

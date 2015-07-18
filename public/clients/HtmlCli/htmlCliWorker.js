@@ -34,11 +34,11 @@ self.addEventListener('message', function(e) {
 		break;
 
 	case 'messageDone':
-		
+
 		msgStatusString = 'done';
-		
+
 	case 'messageError':
-		
+
 		if( msgStatusString == null )
 			msgStatusString = 'aborted';
 

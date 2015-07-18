@@ -32,7 +32,7 @@ class MessagesCreateTable extends Migration
             ])->default('pause');
             // si aucune action à suivre, stop ou en boucle ?
             $table->boolean('play_loop')->default(false);
-            $table->time('play_at_time')->nullable();
+            $table->time('play_at_time')->default('');
             $table->integer('play_duration')->unsigned()->nullable();
             $table->string('content_type');
             $table->text('content');
