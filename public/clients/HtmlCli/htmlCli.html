@@ -38,6 +38,8 @@ html, body {
 		var messagePlaying = null ;
 		var staticMediaTimer = null ;
 
+		var defaultPlayDuration = 30*1000 ;
+
 		require([ 'jquery', 'jplayer' ], function($) {
 
 			displayWaitForInstruction();
@@ -176,7 +178,7 @@ html, body {
 
 			if( textMessage.play_duration==0 && textMessage.play_loop=='1' )
 			{
-				textMessage.play_duration = 10 ;
+				textMessage.play_duration = defaultPlayDuration ;
 			}
 			staticMediaTimer = setTimeout( staticMediaOnTime, textMessage.play_duration, textMessage);
 		}
@@ -265,6 +267,11 @@ html, body {
 				+' width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" />';
 
 			$('#playground').html(html);
+
+			if( textMessage.play_duration==0 && textMessage.play_loop=='1' )
+			{
+				textMessage.play_duration = defaultPlayDuration ;
+			}
 
 			staticMediaTimer = setTimeout( staticMediaOnTime, message.play_duration, message);
 		}

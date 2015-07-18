@@ -168,7 +168,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'play_loop' => '1',
-            'play_duration' => 60*1000,
+            'play_duration' => 30*1000,
             'content_type' => 'application/url',
             'content' => '{"url": "http://comptoir.net"}'
         ]);
