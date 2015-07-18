@@ -10,7 +10,7 @@
 
 <a href="{{ app('url')->route('ChannelEdit', ['id'=>$channel->id]) }}">Edit</a>
 
-<h2>Messages</h2>
+<h2>Messages <button class="btn btn-default btn-xs" onclick="window.location.reload();">refresh</button></h2>
 <table class="table table-striped table-bordered">
 	<tr>
 		<th>Id</th>
