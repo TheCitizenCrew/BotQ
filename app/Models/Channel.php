@@ -67,6 +67,7 @@ class Channel extends Model implements ValidatingModelInterface
     {
         \DB::transaction(function() use ($maxPriority)
         {
+            // TODO: look at $this->messages()->update($attributes);
             foreach( $this->messages as $m )
             {
                 if( $m->priority > $maxPriority )
@@ -75,7 +76,21 @@ class Channel extends Model implements ValidatingModelInterface
                 $m->save();
             }
         });
+    }
 
+    /**
+     * Delete messages with priority >= $minPriority
+     */
+    public function deletePriorized($minPriority)
+    {
+        \DB::transaction(function() use ($minPriority)
+        {
+            foreach( $this->messages as $m )
+            {
+                if( $m->priority >= $minPriority )
+                    $m->delete();
+            }
+        });
     }
 
 }

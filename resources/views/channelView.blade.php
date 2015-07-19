@@ -16,11 +16,12 @@
 text message:
 	<input type="text" id="textMessage" size="42" placeholder="message text" value="Ceci est un message de texte pour ne rien dire." />
 	<input type="checkbox" id="textMessageUrgent" value="1000" />urgent
-	<button onclick="sendTextMessage({{$channel->id}})">send</button>
+	<button onclick="sendTextMessage({{ $channel->id }})">send</button>
 </div>
 
 <h2>Messages
 	<button class="btn btn-default btn-xs" onclick="window.location.reload();">refresh</button>
+	<button class="btn btn-default btn-xs" onclick="deletePriorized({{ $channel->id }});">delete priorized</button>
 	<button class="btn btn-default btn-xs" onclick="window.location='{{ app('url')->route('MessageNew', ['channelId'=>$channel->id]) }}';">new</button>
 </h2>
 <table class="table table-striped table-bordered">
@@ -97,6 +98,14 @@ function resetStatus(channelId, messageId)
 	$.getJSON( url, function( data ) {
 		window.location.reload();
 	});
+}
+
+function deletePriorized(channelId)
+{
+	var url = '/api/channelDeletePriorized/'+channelId ;
+	$.getJSON( url, function( data ) {
+		window.location.reload();
+	});	
 }
 
 function sendTextMessage(channelId)

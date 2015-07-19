@@ -94,14 +94,25 @@ class ApiController extends Controller
 
     public function channelReset($channelId, $maxPriority)
     {
-
         $channel = \App\Models\Channel::find($channelId);
         if( empty($channel) )
         {
+            // TODO: how to return json error ?
             //return response()->
         }
         $channel->resetMessagesStatus($maxPriority);
         return response()->json('ok');
     }
 
+    public function channelDeletePriorized($channelId)
+    {
+        $channel = \App\Models\Channel::find($channelId);
+        if( empty($channel) )
+        {
+            // TODO: how to return json error ?
+            //return response()->
+        }
+        $channel->deletePriorized(1);
+        return response()->json('ok');
+    }
 }

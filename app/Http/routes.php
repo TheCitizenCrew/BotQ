@@ -41,7 +41,7 @@ $app->group([
     $app->get('messageStatus/{channelId:[0-9]+}/{messageId:[0-9]+}/{status}', 'App\Http\Controllers\ApiController@setMessageStatus');
     $app->get('textMessage/{channelId:[0-9]+}/{priority:[0-9]+}/{text}', 'App\Http\Controllers\ApiController@addTextMessage');
     $app->get('channelReset/{channelId:[0-9]+}/{maxPriority:[0-9]+}', 'App\Http\Controllers\ApiController@channelReset');
-    
+    $app->get('channelDeletePriorized/{channelId:[0-9]+}', 'App\Http\Controllers\ApiController@channelDeletePriorized');
     
 });
 
