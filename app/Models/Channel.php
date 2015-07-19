@@ -62,4 +62,20 @@ class Channel extends Model implements ValidatingModelInterface
     {
         return $this->hasMany('\App\Models\Message');
     }
+    
+    public function resetMessagesStatus($maxPriority=0)
+    {
+        \DB::transaction(function() use ($maxPriority)
+        {
+            foreach( $this->messages as $m )
+            {
+                if( $m->priority > $maxPriority )
+                    continue ;
+                $m->status_got = $m->status_done = $m->status_aborted = null ;
+                $m->save();
+            }
+        });
+
+    }
+
 }

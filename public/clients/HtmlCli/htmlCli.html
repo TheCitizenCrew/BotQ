@@ -101,6 +101,9 @@ html, body {
 				} else if( e.data.content_type == 'application/tts' ) {
 					displayTts(messagePlaying);
 
+				} else if( e.data.content_type == 'application/service' ) {
+					displayService(messagePlaying);
+
 				} else {
 					console.log('ERROR: unknow message type !');
 					messagePlayDone(messagePlaying, 'error');
@@ -157,6 +160,33 @@ html, body {
 				'cmd' : cmd,
 				'message' : message
 			}); // Send data to our worker.
+
+		}
+
+		function displayService( serviceMessage )
+		{
+			console.log('displayService');
+			var content = JSON.parse( serviceMessage.content );
+			console.log('displayService content: ');
+			console.log(content);
+
+			switch( content.command )
+			{
+
+			case 'resetChannel':
+
+				var botQurl = window.location.protocol+'//'+window.location.host ;
+				console.log('botq server url : '+botQurl );
+
+				tinyxhr( botQurl+'/api/channelReset/' + serviceMessage.channel_id +'/0',
+						function(err, data, xhr){}, 'GET', null, 'application/javascript');
+
+				messagePlayDone(serviceMessage, 'done');
+				break;
+
+			default:
+				messagePlayDone(serviceMessage, 'error');
+			}
 
 		}
 
@@ -268,9 +298,9 @@ html, body {
 
 			$('#playground').html(html);
 
-			if( textMessage.play_duration==0 && textMessage.play_loop=='1' )
+			if( message.play_duration==0 && message.play_loop=='1' )
 			{
-				textMessage.play_duration = defaultPlayDuration ;
+				message.play_duration = defaultPlayDuration ;
 			}
 
 			staticMediaTimer = setTimeout( staticMediaOnTime, message.play_duration, message);

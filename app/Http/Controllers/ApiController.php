@@ -92,4 +92,16 @@ class ApiController extends Controller
         return response()->json($msg);
     }
 
+    public function channelReset($channelId, $maxPriority)
+    {
+
+        $channel = \App\Models\Channel::find($channelId);
+        if( empty($channel) )
+        {
+            //return response()->
+        }
+        $channel->resetMessagesStatus($maxPriority);
+        return response()->json('ok');
+    }
+
 }

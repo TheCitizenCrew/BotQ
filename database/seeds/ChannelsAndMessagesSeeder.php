@@ -23,7 +23,8 @@ class ChannelsAndMessagesSeeder extends Seeder
         //$this->messsageSet01($channel);
         //$this->messsageSet02($channel);
         //$this->messsageSet03($channel);
-        $this->messsageSet_TestPlayLoop($channel);
+        //$this->messsageSet_TestPlayLoop($channel);
+        $this->messsageSet_TestServiceMessages( $channel );
     }
 
     function messsageSet01($channel)
@@ -173,6 +174,34 @@ class ChannelsAndMessagesSeeder extends Seeder
             'content' => '{"url": "http://comptoir.net"}'
         ]);
 
+    }
+    
+    function messsageSet_TestServiceMessages($channel)
+    {
+        $msgLabelIdx = 1;
+    
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_duration' => 10*1000,
+            'content_type' => 'application/url',
+            'content' => '{"url": "http://comptoir.net"}'
+        ]);
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_duration' => 10*1000,
+            'content_type' => 'application/url',
+            'content' => '{"url": "http://sanilabo.org"}'
+        ]);
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'application/service',
+            'content' => '{"command": "resetChannel"}'
+        ]);
+        
     }
     
 }
