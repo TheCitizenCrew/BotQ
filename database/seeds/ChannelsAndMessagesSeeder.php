@@ -214,22 +214,25 @@ class ChannelsAndMessagesSeeder extends Seeder
 
         $msgLabelIdx = 1 ;
 
+        /* Pas de Facebook because of X-Frame-Options DENIED
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'play_loop' => false,
             'play_duration' => $duration,
             'content_type' => 'application/url',
-            'content' => '{"url": "https://www.facebook.com/CentreSocialPlurielles/&output=embed"}'
+            'content' => '{"url": "https://www.facebook.com/CentreSocialPlurielles/"}'
         ]);
-
+        */
+        
+        
     }
 
     function messsageSet_SaniBotProgrammation($channel)
     {
         $duration = 10*60*1000 ;
-        $duration = 30*1000 ;
-        
+        //$duration = 30*1000 ;
+
         //$ttsurl = 'ws://localhost:8080/action';
         $ttsurl = 'ws://192.168.0.10:5000/action';
 
@@ -250,7 +253,24 @@ class ChannelsAndMessagesSeeder extends Seeder
             'play_loop' => false,
             'play_duration' => $duration,
             'content_type' => 'application/url',
-            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -130px; left: 0; height: 660px; }"}'
+            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -140px; left: 0; height: 660px; }"}'
+        ]);
+
+        // text
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'text/plain',
+            'play_duration' => 15*1000,
+            'content' => '{"text":"Vidéo à venir: Big Buck Bunny !","css":"#playground{ position:absolute; top:50%; text-align:center; font-size:200%; color:yellow; }"}'
+        ]);
+
+        // video
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'video/mp4',
+            'content' => '{"url":"http://www.jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v"}'
         ]);
 
         // normal message, play tts
@@ -261,24 +281,13 @@ class ChannelsAndMessagesSeeder extends Seeder
             'content' => '{"text":"On dirait que le SaniBot est tombé en marche ! C\'est chouette !","url":"'.$ttsurl.'"}'
         ]);
 
-        /* Pas de Facebook because of X-Frame-Options DENIED
         $msg = \App\Models\Message::create([
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'play_loop' => false,
             'play_duration' => $duration,
             'content_type' => 'application/url',
-            'content' => '{"url": "https://www.facebook.com/CentreSocialPlurielles/"}'
-        ]);
-        */
-
-        $msg = \App\Models\Message::create([
-            'channel_id' => $channel->id,
-            'label' => 'msg#' . ($msgLabelIdx ++),
-            'play_loop' => false,
-            'play_duration' => $duration,
-            'content_type' => 'application/url',
-            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -130px; left: 0; height: 660px; }"}'
+            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -140px; left: 0; height: 660px; }"}'
         ]);
 
         $msg = \App\Models\Message::create([
