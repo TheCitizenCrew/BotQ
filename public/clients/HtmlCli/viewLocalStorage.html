@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes" />
+<title>view localStorage</title>
+<link href="/js/require.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<button onclick="erase()">erase</button>
+
+<div id="playground"></div>
+
+
+<script src="/js/require.js"></script>
+<script>
+"use strict" ;
+require(['jquery'], function($) {
+
+	//$('body').css('background-color', 'white');
+	//$('body').css('color', 'black');
+	//$('body').css('font-weight', 'bold');
+
+	var log = localStorage.getItem('log');
+	println( '<pre>'+log+'</pre>' );
+});
+
+function erase(){
+	
+	localStorage.setItem('log',null);
+	window.location.reload();
+}
+
+function println(msg)
+{
+	$('#playground').html( $('#playground').html() + msg);
+}
+
+</script>
+</body>
+</html>

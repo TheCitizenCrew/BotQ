@@ -13,7 +13,6 @@ importScripts('htmlCliCommon.js');
 
 var botQurl = location.protocol+'//'+location.host ;
 //var botQurl = 'http://botq.local.comptoir.net' ;
-log('botq server url : '+botQurl );
 
 var botQChannel = 1;
 var botQPullFreq = 5 * 1000 ;
@@ -27,6 +26,8 @@ var messageNext = null;
  */
 self.addEventListener('message', function(e) {
 
+	log('botq server url : '+botQurl );
+
 	var msgStatusString = null ;
 
 	var data = e.data;
@@ -36,7 +37,7 @@ self.addEventListener('message', function(e) {
 	switch( data.cmd ){
 
 	case 'say':
-		self.postMessage(data.msg);
+		self.postMessage({type:'say',message:data.msg});
 		break;
 
 	case 'messageDone':
@@ -65,7 +66,7 @@ self.addEventListener('message', function(e) {
 			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			// give new work to client
-			self.postMessage(messageCurrent);
+			self.postMessage( {type:'botq','message':messageCurrent} );
 		}
 
 		break;
@@ -163,7 +164,8 @@ function processMessagesSet( json ) {
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 
 			// Send now to htmlClient
-			self.postMessage(messageCurrent);
+			self.postMessage( {type:'botq','message':messageCurrent} );
+
 
 		} else if( json[0].id == messageCurrent.id) {
 
@@ -195,7 +197,7 @@ function processMessagesSet( json ) {
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 
 			// Send now to htmlClient
-			self.postMessage(messageCurrent);
+			self.postMessage( {type:'botq','message':messageCurrent} );
 
 		} else {
 

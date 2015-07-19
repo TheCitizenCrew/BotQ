@@ -62,6 +62,11 @@ class MessageController extends BaseController
             $message->fill($attributes);
         }
         
+        if( $message->play_at_time == '' )
+            $message->play_at_time = null ;
+        if( $message->status_got == '' )
+            $message->status_got = null ;
+
         if (! $message->save()) {
             return view('messageEdit', [
                 'message' => $message

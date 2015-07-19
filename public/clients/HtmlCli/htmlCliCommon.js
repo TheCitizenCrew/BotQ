@@ -12,6 +12,8 @@
  */
 "use strict";
 
+var DEBUG = false ;
+
 /**
  * Exception
  */
@@ -106,8 +108,38 @@ function tinyxhr(url, cb, method, post, contenttype) {
 
 function log(m)
 {
-	if( console )
+	if( ! DEBUG )
+		return ;
+
+  if(self.document === undefined) {
+  	//console.log("webworker");
+		self.postMessage({type:'log',message:m});
+  } else {
+    //console.log("browser");
+  	if( console )
+  	{
+  		console.log(m);
+  	}
+  	var foo = localStorage.getItem('log');
+  	if( foo==null)
+  		foo='';
+  	localStorage.setItem('log', foo+"\n"+m );
+  }
+  
+	/*
+	//if( typeof(window) == undefined )
+	if( undefined == window )
 	{
-		console.log(m);
+		console.log('IN WORKER');
+		//self.postMessage({type:'log',message:m});
 	}
+	else
+	{
+		console.log('IN BROWSER');
+	}
+	//window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+	//var foo = localStorage.getItem('log');
+	//localStorage.setItem('log', log+"\n"+m );
+	*/
+
 }
