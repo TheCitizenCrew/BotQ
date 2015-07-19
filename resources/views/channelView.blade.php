@@ -9,7 +9,7 @@
 </ul>
 
 <div>
-Urgent message:
+text message:
 	<input type="text" id="textMessage" size="42" placeholder="message text" value="Ceci est un message de texte pour ne rien dire." />
 	<input type="checkbox" id="textMessageUrgent" value="1000" />urgent
 	<button onclick="sendTextMessage({{$channel->id}})">send</button>
