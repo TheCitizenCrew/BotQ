@@ -11,6 +11,9 @@
 
 importScripts('htmlCliCommon.js');
 
+var botQurl = location.protocol+'//'+location.host ;
+console.log('botq server url : '+botQurl );
+
 var botQChannel = 1;
 var botQPullFreq = 5 * 1000 ;
 var botQPullTimer = null;
@@ -49,7 +52,7 @@ self.addEventListener('message', function(e) {
 		//
 
 		// Le client a fait son travail, qui est maintenant terminé (done)
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + data.message.id + '/' + msgStatusString,
+		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/' + msgStatusString,
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		messageCurrent = null ;
 
@@ -58,7 +61,7 @@ self.addEventListener('message', function(e) {
 			messageCurrent = messageNext;
 			messageNext = null;
 			// consume message queue
-			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			// give new work to client
 			self.postMessage(messageCurrent);
@@ -70,7 +73,7 @@ self.addEventListener('message', function(e) {
 
 		// messageAborted is not an Error, it's just a ack to update message status on server side
 
-		tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + data.message.id + '/aborted',
+		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/aborted',
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		break;
 
@@ -103,7 +106,7 @@ self.addEventListener('message', function(e) {
  */
 function pulse() {
 
-	tinyxhr('http://botq.localhost/api/messagesSet/' + botQChannel, onXhrResponse, 'GET', null, 'application/javascript');
+	tinyxhr(botQurl+'/api/messagesSet/' + botQChannel, onXhrResponse, 'GET', null, 'application/javascript');
 
 	botQPullTimer = setTimeout(pulse, botQPullFreq);
 }
@@ -141,7 +144,7 @@ function onXhrResponse(err, data, xhr) {
 				messageNext = json[1];
 
 			// Set message has "got" on server side
-			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			// Send now to htmlClient
 			self.postMessage(messageCurrent);
@@ -172,7 +175,7 @@ function onXhrResponse(err, data, xhr) {
 			
 			messageCurrent = json[0];
 
-			tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
+			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			self.postMessage(messageCurrent);
 
@@ -195,7 +198,7 @@ function onXhrResponse(err, data, xhr) {
 
 			if( e.messageId) {
 				// remove bad message from Q
-				tinyxhr('http://botq.localhost/api/messageStatus/' + botQChannel + '/' + e.messageId + '/got',
+				tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + e.messageId + '/got',
 						onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 			}
 
