@@ -107,7 +107,7 @@ class Message extends Model implements ValidatingModelInterface
      * @throws InvalidArgumentException
      * @return \App\Models\Message
      */
-    public static function setMessageStatus($channelId, $messageId, $status)
+    public static function setMessageStatus($channelId, $messageId, $status, $comment=null)
     {
         /**
          * for debug : reset status :
@@ -137,6 +137,7 @@ class Message extends Model implements ValidatingModelInterface
             default:
                 throw new InvalidArgumentException('Invalid message status "' . $status . '"');
         }
+        $m->status_comment = empty($comment)?'':$comment ;
         $m->save();
         return $m;
     }

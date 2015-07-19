@@ -72,7 +72,7 @@ class Channel extends Model implements ValidatingModelInterface
             {
                 if( $m->priority > $maxPriority )
                     continue ;
-                $m->status_got = $m->status_done = $m->status_aborted = null ;
+                $m->status_got = $m->status_done = $m->status_aborted = $m->status_comment = null ;
                 $m->save();
             }
         });

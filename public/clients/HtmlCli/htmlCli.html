@@ -81,13 +81,13 @@ html, body {
 					staticMediaTimer = null ;
 				}
 				// Abort current message
-				messagePlayDone(messagePlaying, 'aborted');
+				messagePlayDone(messagePlaying, 'aborted', 'Replaced by message '+e.data.id);
 			}
 			else
 			{
 				// Should never happend !!
 				if( staticMediaTimer ){
-					log('ERROR, no messagePlaying but a staticMediaTimer');
+					log('ERROR, A staticMediaTimer but no messagePlaying !');
 					clearTimeout( staticMediaTimer );
 					staticMediaTimer = null ;
 				}
@@ -113,8 +113,8 @@ html, body {
 					displayService(messagePlaying);
 
 				} else {
-					log('ERROR: unknow message type !');
-					messagePlayDone(messagePlaying, 'error');
+					log('ERROR: unknow message content_type "'+e.data.content_type+'" !');
+					messagePlayDone(messagePlaying, 'error', 'Unknow message content_type');
 				}
 
 			}
@@ -122,7 +122,7 @@ html, body {
 			{
 				log('ERROR htmlCli: '+ex.name+', '+ex.message );
 				log(ex);
-				messagePlayDone(messagePlaying, 'error');
+				messagePlayDone(messagePlaying, 'Error '+ex.name+': '+ex.message);
 			}
 		}
 
@@ -133,21 +133,23 @@ html, body {
 			
 			if( message.play_loop=='1' )
 			{
-				messagePlayDone(message, 'done');			
+				// pour permettre l'arrivée d'un nouveau message
+				// il faut libérer HtmlCliWorker (messageCurrent=null)
+				messagePlayDone(message, 'done', 'looping');			
 				staticMediaTimer = setTimeout( staticMediaOnTime, message.play_duration, message);
 				return;
 			}
 
 			staticMediaTimer = null ;
-			messagePlayDone(message, 'done');			
+			messagePlayDone(message, 'done');
 		}
 
 		/**
 		 * to call when a message play is finished (done, aborted or error).
 		 */
-		function messagePlayDone(message, status) {
+		function messagePlayDone(message, status, comment) {
 
-			log('messagePlayDone() id:'+message.id+', status:'+status);
+			log('messagePlayDone() id:'+message.id+', status:'+status+', comment:'+comment);
 
 			var cmd ;
 			if( status == 'done') {
@@ -165,8 +167,9 @@ html, body {
 			}
 
 			worker.postMessage({
-				'cmd' : cmd,
-				'message' : message
+				'cmd': cmd,
+				'message': message,
+				'comment': comment
 			}); // Send data to our worker.
 
 		}
@@ -174,9 +177,19 @@ html, body {
 		function displayService( serviceMessage )
 		{
 			log('displayService');
+			
+			// Leave some time before execute...
+			// let's Worker to set message "got" on server side.
+
+			setTimeout( displayServiceOnTimer, 1000, serviceMessage);
+		}
+
+		function displayServiceOnTimer( serviceMessage )
+		{
+			log('displayServiceOnTimer');
 			var content = JSON.parse( serviceMessage.content );
-			log('displayService content: ');
-			log(content);
+			//log('displayService content: ');
+			//log(content);
 
 			switch( content.command )
 			{
@@ -193,9 +206,8 @@ html, body {
 				break;
 
 			default:
-				messagePlayDone(serviceMessage, 'error');
-			}
-
+				messagePlayDone(serviceMessage, 'error', 'Unknow service command "'+content.command+'"');
+			}			
 		}
 
 		function displayPlainText(textMessage)
@@ -253,7 +265,7 @@ html, body {
 			connection.onerror = function (error) {
 				log('TTS WebSocket Error!');
 				log(error);
-				messagePlayDone(ttsMessage, 'error');
+				messagePlayDone(ttsMessage, 'error', 'TTS WebSocket Error');
 			};
 			connection.onmessage = function (e) {
 				log('TTS WebSocket message: ' + e.data);
@@ -272,7 +284,7 @@ html, body {
 					break;
 				case 'error':
 					log( 'ERROR: TTS encured an error: ' + obj.message+', data: '+obj.data );
-					messagePlayDone(ttsMessage, 'error');
+					messagePlayDone(ttsMessage, 'Error: '+ obj.message+', data: '+obj.data);
 					break;
 				default:
 					log( 'ERROR: Unknow tts websocket message : ' + e.data );
@@ -347,23 +359,13 @@ html, body {
 				media_supplied = 'flv';
 				break;
 			default:
-				log('ERROR', 'unknow media type "' + videomessage.content_type + '"');
-				messagePlayDone(videomessage, 'error');
+				log('ERROR', 'unknow media type "' + videomessage.content_type + '" !');
+				messagePlayDone(videomessage, 'error', 'unknow media type "' + videomessage.content_type + '"');
 				return;
 			}
 			//log(media_supplied);
 			//log(media);
 			$("#jquery_jplayer").jPlayer({
-				ready : function() {
-					log('jPlayer.ready');
-					$(this).jPlayer('setMedia', media);
-					$(this).jPlayer('play');
-				},
-				ended : function() {
-					log('jPlayer.ended');
-					//$(this).jPlayer("play"); // play again !
-					messagePlayDone(videomessage, 'done');
-				},
 				cssSelectorAncestor : "#jp_container",
 				preload : 'auto',
 				supplied : media_supplied,
@@ -372,6 +374,38 @@ html, body {
 					width : "" + window.innerWidth + "px",
 					height : "" + window.innerHeight + "px"
 				},
+				// HTML Standard embedded-content media events (4.8.14.16)
+				// https://html.spec.whatwg.org/multipage/embedded-content.html#mediaevents
+				ready : function(e) {
+					log('jPlayer.ready');
+					$(this).jPlayer('setMedia', media);
+					$(this).jPlayer('play');
+				},
+				ended : function(e) {
+					log('jPlayer.ended');
+					//$(this).jPlayer("play"); // play again !
+					messagePlayDone(videomessage, 'done');
+				},
+				error : function(e) {
+					log('jPlayer.error');
+					log(e);
+					messagePlayDone(videomessage, 'error', 'error ' + e );
+				},
+				suspend : function(e) {
+					// The user agent is intentionally not currently fetching media data. 
+					//log('jPlayer.suspend');
+					//log(e);
+				},
+				stalled : function(e) {
+					log('jPlayer.stalled');
+					log(e);
+					messagePlayDone(videomessage, 'error', 'stalled '+e );
+				},
+				abort : function(e) {
+					log('jPlayer.abort');
+					log(e);
+					messagePlayDone(videomessage, 'error', 'abort '+e );
+				}
 
 			});
 		}

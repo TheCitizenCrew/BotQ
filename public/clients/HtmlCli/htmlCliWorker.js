@@ -53,7 +53,7 @@ self.addEventListener('message', function(e) {
 		//
 
 		// Le client a fait son travail, qui est maintenant terminé (done)
-		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/' + msgStatusString,
+		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/' + msgStatusString + (data.comment?'/'+encodeURI(data.comment):''),
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		messageCurrent = null ;
 
@@ -74,7 +74,7 @@ self.addEventListener('message', function(e) {
 
 		// messageAborted is not an Error, it's just a ack to update message status on server side
 
-		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/aborted',
+		tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + data.message.id + '/aborted'+ (data.comment?'/'+encodeURI(data.comment):''),
 				onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
 		break;
 
@@ -107,18 +107,19 @@ self.addEventListener('message', function(e) {
  */
 function pulse() {
 
-	tinyxhr(botQurl+'/api/messagesSet/' + botQChannel, onXhrResponse, 'GET', null, 'application/javascript');
+	tinyxhr(botQurl+'/api/messagesSet/' + botQChannel, onXhrMessagesSet, 'GET', null, 'application/javascript');
 
-	botQPullTimer = setTimeout(pulse, botQPullFreq);
+	//botQPullTimer = setTimeout(pulse, botQPullFreq);
 }
 
-function onXhrResponse(err, data, xhr) {
+function onXhrMessagesSet(err, data, xhr) {
 
 	//log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
 	//log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
 
 	if( err) {
-		log("goterr ", err, 'status=' + xhr.status);
+		log('ERROR XHR: '+ err + ', status=' + xhr.status);
+		botQPullTimer = setTimeout(pulse, botQPullFreq);
 		return;
 	}
 
@@ -128,16 +129,29 @@ function onXhrResponse(err, data, xhr) {
 	if( json.length == 0) {
 		//log('JSON empty');
 		// TODO: bug? messageNext = null;
+		botQPullTimer = setTimeout(pulse, botQPullFreq);
 		return;
 	}
 	log(json);
 
 	try {
+		processMessagesSet( json );
+	}
+	catch( ex )
+	{
+		log('ERROR htmlCliWorker: '+ex.name+', '+ex.message );
+		log(ex);
+	}
+
+	botQPullTimer = setTimeout(pulse, botQPullFreq);
+}
+
+function processMessagesSet( json ) {
 
 		if( messageCurrent == null) {
 
 			// Le client n'a plus rien a manger...
-			log('onXhrResponse() case #1');
+			log('processMessagesSet() case #1');
 
 			messageCurrent = json[0];
 
@@ -147,13 +161,14 @@ function onXhrResponse(err, data, xhr) {
 			// Set message has "got" on server side
 			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+
 			// Send now to htmlClient
 			self.postMessage(messageCurrent);
 
 		} else if( json[0].id == messageCurrent.id) {
 
 			// c'est le meme message que le message courant
-			log('onXhrResponse() case #2');
+			log('processMessagesSet() case #2');
 
 			if( json.length == 2) {
 				if( messageNext == null) {
@@ -165,24 +180,26 @@ function onXhrResponse(err, data, xhr) {
 
 		} else if(
 				json[0].priority > messageCurrent.priority
-				|| json[0].play_at_time != ''
+				|| json[0].play_at_time != null
 				/*|| messageCurrent.play_loop == '1'*/
 				) {
 
 			// new message with higher priority
 			// or that it's time to play
-			// or the current message is waiting in an infinite loop
-			log('onXhrResponse() case #3');
+			log('processMessagesSet() case #3');
 			
 			messageCurrent = json[0];
 
+			// Set message has "got" on server side
 			tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + messageCurrent.id + '/got',
 					onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
+
+			// Send now to htmlClient
 			self.postMessage(messageCurrent);
 
 		} else {
 
-			log('onXhrResponse() case #4');
+			log('processMessagesSet() case #4');
 
 			if( messageNext == null) {
 				messageNext = json[0];
@@ -193,12 +210,6 @@ function onXhrResponse(err, data, xhr) {
 			//}
 		}
 
-	}
-	catch( ex )
-	{
-		log('ERROR htmlCliWorker: '+ex.name+', '+ex.message );
-		log(ex);
-	}
 
 }
 

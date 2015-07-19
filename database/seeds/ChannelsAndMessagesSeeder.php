@@ -230,8 +230,8 @@ class ChannelsAndMessagesSeeder extends Seeder
 
     function messsageSet_SaniBotProgrammation($channel)
     {
-        $duration = 10*60*1000 ;
-        //$duration = 30*1000 ;
+        //$duration = 10*60*1000 ;
+        $duration = 6*1000 ;
 
         //$ttsurl = 'ws://localhost:8080/action';
         $ttsurl = 'ws://192.168.0.10:5000/action';
@@ -261,7 +261,7 @@ class ChannelsAndMessagesSeeder extends Seeder
             'channel_id' => $channel->id,
             'label' => 'msg#' . ($msgLabelIdx ++),
             'content_type' => 'text/plain',
-            'play_duration' => 15*1000,
+            'play_duration' => 5*1000,
             'content' => '{"text":"Vidéo à venir: Big Buck Bunny !","css":"#playground{ position:absolute; top:50%; text-align:center; font-size:200%; color:yellow; }"}'
         ]);
 

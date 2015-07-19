@@ -38,6 +38,7 @@ text message:
 		<td>status got</td>
 		<td>status done</td>
 		<td>status aborted</td>
+		<td>status comment</td>
 		<td>actions</td>
 	</tr>
 	@foreach ($channel->messages->reverse() as $message)
@@ -72,6 +73,7 @@ text message:
 		<td>{{ $message->status_got }}</td>
 		<td>{{ $message->status_done }}</td>
 		<td>{{ $message->status_aborted }}</td>
+		<td>{{ $message->status_comment }}</td>
 		<td><a
             href="{{ app('url')->route('MessageEdit', ['id'=>$message->id]) }}">edit</a>
             <br/>

@@ -48,7 +48,7 @@ class ApiController extends Controller
         $m = new Message();
         $q2 = $m->newQueryWithoutScopes()
             ->where('play_at_time', '=', $time_hms)
-            ->orWhere('play_at_time', '=', '');
+            ->orWhere('play_at_time', '=', null);
         $q->addNestedWhereQuery($q2->getQuery());
 
         // error_log($q->toSql());
@@ -64,9 +64,9 @@ class ApiController extends Controller
      * @param string $status could be "got", "done", "aborted" or "reset"
      * @return \Symfony\Component\HttpFoundation\Response as JSON
      */
-    public function setMessageStatus($channelId, $messageId, $status)
+    public function setMessageStatus($channelId, $messageId, $status, $comment=null)
     {
-        $m = Message::setMessageStatus($channelId, $messageId, $status);
+        $m = Message::setMessageStatus($channelId, $messageId, $status, urldecode($comment) );
         return response()->json($m);
     }
 
