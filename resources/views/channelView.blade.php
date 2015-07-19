@@ -81,7 +81,7 @@ text message:
 @section('javascript')
 @parent
 <!--script src="/js/jquery/jquery.min.js"></script-->
-<script src="/js/require.js"></script>
+<!--script src="/js/require.js"></script-->
 <script>
 require(['jquery'], function($) {
     //$('body').css('background-color', 'black');
