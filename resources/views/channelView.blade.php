@@ -2,6 +2,10 @@
 
 @section('content')
 
+<div style="float: right">
+<a href="/clients/HtmlCli/htmlCli.html" target="_blanck">htmlCli</a>
+</div>
+
 <h1>Channel <button class="btn btn-default btn-xs" onclick="window.location = '{{ app('url')->route('ChannelEdit', ['id'=>$channel->id]) }}';">edit</button></h1>
 <ul>
 	<li>{{ $channel->label }}</li>

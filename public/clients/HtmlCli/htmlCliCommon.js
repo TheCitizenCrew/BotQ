@@ -103,3 +103,11 @@ function tinyxhr(url, cb, method, post, contenttype) {
 	else
 		xhr.send(post)
 }
+
+function log(m)
+{
+	if( console )
+	{
+		console.log(m);
+	}
+}

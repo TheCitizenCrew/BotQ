@@ -12,7 +12,8 @@
 importScripts('htmlCliCommon.js');
 
 var botQurl = location.protocol+'//'+location.host ;
-console.log('botq server url : '+botQurl );
+//var botQurl = 'http://botq.local.comptoir.net' ;
+log('botq server url : '+botQurl );
 
 var botQChannel = 1;
 var botQPullFreq = 5 * 1000 ;
@@ -29,8 +30,8 @@ self.addEventListener('message', function(e) {
 	var msgStatusString = null ;
 
 	var data = e.data;
-	console.log('htmlCliWorker.js received cmd "' + data.cmd + '"');
-	console.log(data);
+	log('htmlCliWorker.js received cmd "' + data.cmd + '"');
+	log(data);
 
 	switch( data.cmd ){
 
@@ -81,7 +82,7 @@ self.addEventListener('message', function(e) {
 		// Si ce n'est pas le cas ... Passons lui le message suivant
 		if( messageCurrent.id == data.message.id )
 		{
-			console.log('################################');
+			log('################################');
 		}
 
 	case 'start':
@@ -113,30 +114,30 @@ function pulse() {
 
 function onXhrResponse(err, data, xhr) {
 
-	//console.log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
-	//console.log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
+	//log('onXhrResponse() messageCurrent ' + (messageCurrent ? messageCurrent.id : 'null'));
+	//log('onXhrResponse() messageNext ' + (messageNext ? messageNext.id : 'null'));
 
 	if( err) {
-		console.log("goterr ", err, 'status=' + xhr.status);
+		log("goterr ", err, 'status=' + xhr.status);
 		return;
 	}
 
-	// console.log(data);
+	// log(data);
 	var json = JSON.parse(data);
 
 	if( json.length == 0) {
-		//console.log('JSON empty');
+		//log('JSON empty');
 		// TODO: bug? messageNext = null;
 		return;
 	}
-	console.log(json);
+	log(json);
 
 	try {
 
 		if( messageCurrent == null) {
 
 			// Le client n'a plus rien a manger...
-			console.log('onXhrResponse() case #1');
+			log('onXhrResponse() case #1');
 
 			messageCurrent = json[0];
 
@@ -152,7 +153,7 @@ function onXhrResponse(err, data, xhr) {
 		} else if( json[0].id == messageCurrent.id) {
 
 			// c'est le meme message que le message courant
-			console.log('onXhrResponse() case #2');
+			log('onXhrResponse() case #2');
 
 			if( json.length == 2) {
 				if( messageNext == null) {
@@ -171,7 +172,7 @@ function onXhrResponse(err, data, xhr) {
 			// new message with higher priority
 			// or that it's time to play
 			// or the current message is waiting in an infinite loop
-			console.log('onXhrResponse() case #3');
+			log('onXhrResponse() case #3');
 			
 			messageCurrent = json[0];
 
@@ -181,7 +182,7 @@ function onXhrResponse(err, data, xhr) {
 
 		} else {
 
-			console.log('onXhrResponse() case #4');
+			log('onXhrResponse() case #4');
 
 			if( messageNext == null) {
 				messageNext = json[0];
@@ -195,8 +196,8 @@ function onXhrResponse(err, data, xhr) {
 	}
 	catch( ex )
 	{
-		console.log('ERROR htmlCliWorker: '+ex.name+', '+ex.message );
-		console.log(ex);
+		log('ERROR htmlCliWorker: '+ex.name+', '+ex.message );
+		log(ex);
 	}
 
 }
@@ -208,6 +209,6 @@ function onXhrResponse(err, data, xhr) {
  * @param xhr
  */
 function onXhrResponseMessageStatus(err, data, xhr) {
-	//console.log('onXhrResponseMessageStatus() err: '+err+', data: '+data);
+	//log('onXhrResponseMessageStatus() err: '+err+', data: '+data);
 }
 

@@ -47,12 +47,12 @@ html, body {
 			// debug/essai
 			//displayHtmlUrl({play_duration:15000, content: 'http://botq.localhost/pages/chrono.html#msg1'});
 
-			worker = new Worker('htmlCliWorker.js?'+(new Date()/10));
+			worker = new Worker('htmlCliWorker.js?'+(new Date()/1));
+			//worker = new Worker('htmlCliWorker.js');
 			worker.addEventListener('message', workerOnMessage, false);
 			worker.postMessage({
 				cmd : 'start'
 			});
-			
 		});
 
 		/**
@@ -62,8 +62,8 @@ html, body {
 		 */
 		function workerOnMessage(e) {
 
-			console.log('htmlCli received a message: '+e.data.id);
-			console.log(e);
+			log('htmlCli received a message: '+e.data.id);
+			log(e);
 
 
 			if( messagePlaying != null )
@@ -79,7 +79,7 @@ html, body {
 			{
 				// Should never happend !!
 				if( staticMediaTimer ){
-					console.log('ERROR, no messagePlaying but a staticMediaTimer');
+					log('ERROR, no messagePlaying but a staticMediaTimer');
 					clearTimeout( staticMediaTimer );
 					staticMediaTimer = null ;
 				}
@@ -105,22 +105,22 @@ html, body {
 					displayService(messagePlaying);
 
 				} else {
-					console.log('ERROR: unknow message type !');
+					log('ERROR: unknow message type !');
 					messagePlayDone(messagePlaying, 'error');
 				}
 
 			}
 			catch(ex)
 			{
-				console.log('ERROR htmlCli: '+ex.name+', '+ex.message );
-				console.log(ex);
+				log('ERROR htmlCli: '+ex.name+', '+ex.message );
+				log(ex);
 				messagePlayDone(messagePlaying, 'error');
 			}
 		}
 
 		function staticMediaOnTime( message )
 		{
-			console.log('staticMediaOnTime() for id: '+message.id);
+			log('staticMediaOnTime() for id: '+message.id);
 			//$(this).jPlayer("play"); // play again !
 			
 			if( message.play_loop=='1' )
@@ -139,7 +139,7 @@ html, body {
 		 */
 		function messagePlayDone(message, status) {
 
-			console.log('messagePlayDone() id:'+message.id+', status:'+status);
+			log('messagePlayDone() id:'+message.id+', status:'+status);
 
 			var cmd ;
 			if( status == 'done') {
@@ -165,10 +165,10 @@ html, body {
 
 		function displayService( serviceMessage )
 		{
-			console.log('displayService');
+			log('displayService');
 			var content = JSON.parse( serviceMessage.content );
-			console.log('displayService content: ');
-			console.log(content);
+			log('displayService content: ');
+			log(content);
 
 			switch( content.command )
 			{
@@ -176,7 +176,7 @@ html, body {
 			case 'resetChannel':
 
 				var botQurl = window.location.protocol+'//'+window.location.host ;
-				console.log('botq server url : '+botQurl );
+				log('botq server url : '+botQurl );
 
 				tinyxhr( botQurl+'/api/channelReset/' + serviceMessage.channel_id +'/0',
 						function(err, data, xhr){}, 'GET', null, 'application/javascript');
@@ -192,11 +192,11 @@ html, body {
 
 		function displayPlainText(textMessage)
 		{
-			console.log('displayPlainText start for '+ textMessage.play_duration +'ms (loop='+(textMessage.play_loop=='1'?'On':'Off')+')');
+			log('displayPlainText start for '+ textMessage.play_duration +'ms (loop='+(textMessage.play_loop=='1'?'On':'Off')+')');
 
 			var content = JSON.parse( textMessage.content );
-			console.log('displayPlainText content: ');
-			console.log(content);
+			log('displayPlainText content: ');
+			log(content);
 
 			var html = '' ;
 			if( content.css){
@@ -215,39 +215,43 @@ html, body {
 
 		function displayTts(ttsMessage) {
 
-			console.log('displayTts');
+			log('displayTts');
 			
 			var content = JSON.parse( ttsMessage.content );
-			console.log('displayTts content: ');
-			console.log(content);
+			log('displayTts content: ');
+			log(content);
 
 			var html = '' ;
 			html += '<div>Playing TTS<blockquote>'+content.text+'</blockquote></div>';
 
 			$('#playground').html(html);
 
-			var url = 'ws://localhost:8080/action';
+			var url = 'ws://localhost:8080/action';				
+			if( content.url )
+			{
+				url = content.url ;
+			}
 
 			var connection = new WebSocket( url );
 
 			connection.onopen = function () {
-				console.log('TTS WebSocket Opened');
+				log('TTS WebSocket Opened');
 				//connection.send('Ping');
 				connection.send( JSON.stringify( {action:"speak",message: content.text} ) );
 			};
 			connection.onclose = function(event) {
-				console.log('TTS WebSocket Closed');
+				log('TTS WebSocket Closed');
 			};
 			connection.onerror = function (error) {
-				console.log('TTS WebSocket Error!');
-				console.log(error);
+				log('TTS WebSocket Error!');
+				log(error);
 				messagePlayDone(ttsMessage, 'error');
 			};
 			connection.onmessage = function (e) {
-				console.log('TTS WebSocket message: ' + e.data);
-				console.log(e);
+				log('TTS WebSocket message: ' + e.data);
+				log(e);
 				var obj = JSON.parse(e.data);
-				console.log(obj);
+				log(obj);
 				
 				switch( obj.result )
 				{
@@ -259,11 +263,11 @@ html, body {
 					messagePlayDone(ttsMessage, 'done');
 					break;
 				case 'error':
-					console.log( 'ERROR: TTS encured an error: ' + obj.message+', data: '+obj.data );
+					log( 'ERROR: TTS encured an error: ' + obj.message+', data: '+obj.data );
 					messagePlayDone(ttsMessage, 'error');
 					break;
 				default:
-					console.log( 'ERROR: Unknow tts websocket message : ' + e.data );
+					log( 'ERROR: Unknow tts websocket message : ' + e.data );
 				}
 			};
 
@@ -271,24 +275,14 @@ html, body {
 
 		function displayHtmlUrl(message) {
 
-			console.log('displayHtmlUrl start for '+ message.play_duration +'ms');
+			log('displayHtmlUrl start for '+ message.play_duration +'ms');
 
 			var content = JSON.parse( message.content );
-			console.log('displayHtmlUrl content: ');
-			console.log(content);
+			log('displayHtmlUrl content: ');
+			log(content);
 
 			var html = '' ;
 			if( content.css ){
-				/*
-				<style>
-				#theIframe {
-					position : absolute;
-					top      : 0;
-					left     : 0;
-					height   : 200px;
-				}
-				</style>
-				*/
 				html += '<style>'+content.css+'</style>' ;
 			}
 
@@ -321,8 +315,8 @@ html, body {
 			};
 
 			var content = JSON.parse( videomessage.content );
-			console.log('displayVideo content: ');
-			console.log(content);
+			log('displayVideo content: ');
+			log(content);
 
 			switch( videomessage.content_type ){
 			case 'video/mp4':
@@ -342,20 +336,20 @@ html, body {
 				media_supplied = 'flv';
 				break;
 			default:
-				console.log('ERROR', 'unknow media type "' + videomessage.content_type + '"');
+				log('ERROR', 'unknow media type "' + videomessage.content_type + '"');
 				messagePlayDone(videomessage, 'error');
 				return;
 			}
-	console.log(media_supplied);
-	console.log(media);
+			//log(media_supplied);
+			//log(media);
 			$("#jquery_jplayer").jPlayer({
 				ready : function() {
-					console.log('jPlayer.ready');
+					log('jPlayer.ready');
 					$(this).jPlayer('setMedia', media);
 					$(this).jPlayer('play');
 				},
 				ended : function() {
-					console.log('jPlayer.ended');
+					log('jPlayer.ended');
 					//$(this).jPlayer("play"); // play again !
 					messagePlayDone(videomessage, 'done');
 				},

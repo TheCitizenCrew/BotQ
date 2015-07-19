@@ -20,14 +20,17 @@ class ChannelsAndMessagesSeeder extends Seeder
             error_log(var_export($channel->getErrors(), true));
         }
         
-        //$this->messsageSet01($channel);
-        //$this->messsageSet02($channel);
-        //$this->messsageSet03($channel);
+        //$this->messsageSet_TestPriority1($channel);
+        //$this->messsageSet_TestPlayAtTime($channel);
+        //$this->messsageSet_TestPriority2($channel);
         //$this->messsageSet_TestPlayLoop($channel);
-        $this->messsageSet_TestServiceMessages( $channel );
+        //$this->messsageSet_TestServiceMessages( $channel );
+        
+        //$this->messsageSet_SaniBotProgrammationEssai1( $channel );
+        $this->messsageSet_SaniBotProgrammation( $channel );
     }
 
-    function messsageSet01($channel)
+    function messsageSet_TestPriority1($channel)
     {
         $msgLabelIdx = 1;
 
@@ -66,7 +69,7 @@ class ChannelsAndMessagesSeeder extends Seeder
      * 
      * @param unknown $channel            
      */
-    function messsageSet02($channel)
+    function messsageSet_TestPlayAtTime($channel)
     {
         $msgLabelIdx = 0;
         
@@ -103,7 +106,7 @@ class ChannelsAndMessagesSeeder extends Seeder
      * 
      * @param unknown $channel            
      */
-    function messsageSet03($channel)
+    function messsageSet_TestPriority2($channel)
     {
         $msgLabelIdx = 1;
 
@@ -203,5 +206,87 @@ class ChannelsAndMessagesSeeder extends Seeder
         ]);
         
     }
-    
+
+    function messsageSet_SaniBotProgrammationEssai1($channel)
+    {
+        $duration = 10*60*1000 ;
+        $duration = 30*1000 ;
+
+        $msgLabelIdx = 1 ;
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_loop' => false,
+            'play_duration' => $duration,
+            'content_type' => 'application/url',
+            'content' => '{"url": "https://www.facebook.com/CentreSocialPlurielles/&output=embed"}'
+        ]);
+
+    }
+
+    function messsageSet_SaniBotProgrammation($channel)
+    {
+        $duration = 10*60*1000 ;
+        $duration = 30*1000 ;
+        
+        //$ttsurl = 'ws://localhost:8080/action';
+        $ttsurl = 'ws://192.168.0.10:5000/action';
+
+        $msgLabelIdx = 1 ;
+
+        // normal message, play tts
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'application/tts',
+            'content' => '{"text":"Bienvenue au Sanitas","url":"'.$ttsurl.'"}'
+        ]);
+
+        // normal message, play web page
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_loop' => false,
+            'play_duration' => $duration,
+            'content_type' => 'application/url',
+            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -130px; left: 0; height: 660px; }"}'
+        ]);
+
+        // normal message, play tts
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'application/tts',
+            'content' => '{"text":"On dirait que le SaniBot est tombé en marche ! C\'est chouette !","url":"'.$ttsurl.'"}'
+        ]);
+
+        /* Pas de Facebook because of X-Frame-Options DENIED
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_loop' => false,
+            'play_duration' => $duration,
+            'content_type' => 'application/url',
+            'content' => '{"url": "https://www.facebook.com/CentreSocialPlurielles/"}'
+        ]);
+        */
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'play_loop' => false,
+            'play_duration' => $duration,
+            'content_type' => 'application/url',
+            'content' => '{"url": "http://sanilabo.org", "css":"#theIframe{ position: absolute; top: -130px; left: 0; height: 660px; }"}'
+        ]);
+
+        $msg = \App\Models\Message::create([
+            'channel_id' => $channel->id,
+            'label' => 'msg#' . ($msgLabelIdx ++),
+            'content_type' => 'application/service',
+            'content' => '{"command": "resetChannel"}'
+        ]);
+
+    }
 }
