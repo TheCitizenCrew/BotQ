@@ -16,6 +16,7 @@
  * Exception
  */
 
+/*
 var Exception = function(message) {
 	this.message = message;
 }
@@ -30,6 +31,7 @@ var UnknowMessageTypeException = function(msgType, messageId) {
 	this.messageId = messageId;
 }
 UnknowMessageTypeException.prototype = Object.create(Exception.prototype);
+*/
 
 /**
  * Message

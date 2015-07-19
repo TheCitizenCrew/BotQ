@@ -192,20 +192,11 @@ function onXhrResponse(err, data, xhr) {
 			//}
 		}
 
-	} catch( e ) {
-		if( e instanceof UnknowMessageTypeException) {
-			console.log('UnknowMessageTypeException: ' + e.toString());
-
-			if( e.messageId) {
-				// remove bad message from Q
-				tinyxhr(botQurl+'/api/messageStatus/' + botQChannel + '/' + e.messageId + '/got',
-						onXhrResponseMessageStatus, 'GET', null, 'application/javascript');
-			}
-
-		} else {
-			console.log('Uknow Exception: ');
-			console.log(e);
-		}
+	}
+	catch( ex )
+	{
+		console.log('ERROR htmlCliWorker: '+ex.name+', '+ex.message );
+		console.log(ex);
 	}
 
 }
