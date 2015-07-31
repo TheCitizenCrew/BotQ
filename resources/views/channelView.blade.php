@@ -70,7 +70,13 @@ text message:
 		</td>
 		<td>{{ $message->content_type }}</td>
 		<td>{{ $message->content }}</td>
-		<td>{{ $message->status_got }}</td>
+		<td>
+			@if( $message->status_got != '' )
+				<span class="label label-default">{{ $message->status_got }}</span>
+			@else
+				{{ $message->status_got }}
+			@endif
+		</td>
 		<td>{{ $message->status_done }}</td>
 		<td>{{ $message->status_aborted }}</td>
 		<td>{{ $message->status_comment }}</td>
